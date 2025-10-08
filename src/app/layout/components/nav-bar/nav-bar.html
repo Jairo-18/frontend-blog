@@ -1,0 +1,17 @@
+<nav class="h-full">
+  <article class="flex h-full w-full content-between px-6 py-2 items-center text-white">
+    <section class="flex content-between w-[50%] items-center gap-x-3">
+      <i class="fa-solid fa-film text-[45px]"></i>
+      <i class="fa-solid fa-book-open text-[45px]"></i>
+      <h1 class="text-base md:text-4xl font-medium md:font-bold cursor-pointer" routerLink="/home">
+        CINE Y LIBROS
+      </h1>
+    </section>
+    <section
+      class="flex content-between w-[50%] items-center justify-end gap-x-3 font-bold text-2xl"
+    >
+      <button matButton="elevated" routerLink="/auth/login">Iniciar Sesión</button>
+      <button matFab extended routerLink="/auth/register">Registrarse</button>
+    </section>
+  </article>
+</nav>

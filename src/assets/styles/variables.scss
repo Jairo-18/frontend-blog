@@ -1,0 +1,157 @@
+// Colores base
+$white-color-base: #ffffff;
+$black-color-base: #000000;
+$black-color-base-10: #ffffff;
+$brand-red-color: #d61a44;
+$brand-red-color-10: #a90429;
+
+// Paleta de colores base
+$light-purple-50: #9811fb; // Tonalidad muy clara
+$light-purple-100: #9811fb; // Tonalidad clara
+$light-purple-200: #9811fb; // Tonalidad suave
+$light-purple-300: #9811fb; // Tonalidad intermedia
+$light-purple-400: #9811fb; // Tonalidad más fuerte
+$light-purple-500: #9811fb; // Color base (principal)
+$light-purple-600: #9811fb; // Un poco más oscuro
+$light-purple-700: #9811fb; // Más oscuro
+$light-purple-800: #643090;
+$light-purple-900: #9811fb; // Más oscuro
+$light-purple-A100: #9811fb; // Variante en tonos pasteles
+$light-purple-A200: #9811fb; // Variante más fuerte
+$light-purple-A400: #9811fb; // Variante más saturada
+$light-purple-A700: #9811fb;
+$deep-purple-dark: #10172b;
+
+// Colores semánticos principales
+$brand-light-purple-color: #9811fb;
+$primary-color: $light-purple-500;
+// $secondary-color: $light-purple-900;
+$accent-color: $light-purple-A400;
+$background-color: $light-purple-50;
+$surface-color: $white-color-base;
+$error-color: #b00020;
+$gray-color: #797979;
+
+$heigth-nav-bar: 85px;
+$heigth-footer: 245px;
+$width-side-bar: 300px;
+
+// Medidas globales
+$brand-height-router-outlet-container: calc(100vh - ($heigth-nav-bar));
+
+// Colores de fondo nav-bar
+$nav-bar-background-color: #2a3044;
+$nav-bar-background-gradient: linear-gradient(90deg, #2a3044 0%, #692e95 100%);
+
+// Colores de fondo home
+$home-background-color: #24133f;
+$home-background-gradient: linear-gradient(to bottom right, #24133f 0%, #551785 50%, #311a55 100%);
+
+// Layout
+$nav-bar-background: $nav-bar-background-gradient, $nav-bar-background-color;
+$home-background: $home-background-gradient, $home-background-color;
+$footer-background: #9811fb;
+$side-bar-background: #9811fb;
+$side-bar-background-color: #9811fb;
+$header-background: #ffffff;
+
+// UI Components
+$brand-mobile-font-size: 14px;
+$brand-web-font-size: 14px;
+$brand-mobile-icon-button-size: 30px;
+$brand-mobile-icon-size: 18px;
+$brand-mobile-height: 40px;
+$brand-tablet-height: 46px;
+$brand-web-height: 53px;
+$brand-mat-menu-item-size: 18px;
+$brand-mat-menu-active-item-size: 14px;
+
+/*Colores para componentes*/
+$brand-error-color: $brand-red-color;
+$brand-light-purple-color: #9811fb;
+$brand-gray-color: $gray-color;
+$brand-border-radius: 24px;
+$brand-border-radius-sm: 16px;
+$brand-border-radius-manage-users-cards: 6px;
+$brand-purple-color: #9811fb;
+$brand-radio-checked-color: $brand-purple-color;
+$brand-outlined-rounded-inputs-color: $brand-gray-color;
+$brand-outlined-inputs-color: $brand-light-purple-color;
+$brand-icons-color: $brand-light-purple-color;
+$brand-purple-button-color: $brand-purple-color;
+$brand-form-field-focus-color: $brand-purple-color;
+$brand-success-input-color: #9811fb;
+$brand-global-height-button: $brand-tablet-height;
+
+// Para tamaños de pantalla
+$max-width-layout: 1440px;
+$max-width-tablet: 899.98px;
+$max-width-phone: 575.98px;
+$min-width-desktop: 576px;
+
+// Colores funcionales adicionales
+$success-color: #4caf50;
+$warning-color: #d82323;
+$info-color: #2196f3;
+
+// Bordes
+$border-radius: 4px;
+$border-width: 1px;
+$border-color: $light-purple-400;
+$global-border: $border-width solid $border-color;
+
+// Variaciones de los colores principales
+$primary-light: $light-purple-300;
+$primary-dark: $light-purple-700;
+
+// Colores de hover para botones
+$button-hover-color: $primary-light;
+$outlined-button-hover-color: $light-purple-100;
+$fab-hover-color: $primary-light;
+$warning-hover-color: #e43e3e;
+
+// Sombras
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+// Tipografía
+$font-size-small: 12px;
+$font-size-medium: 14px;
+$font-size-large: 16px;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+// Espaciado
+$spacing-small: 8px;
+$spacing-medium: 16px;
+$spacing-large: 24px;
+
+// Colores de texto
+$text-primary: $light-purple-900;
+$text-secondary: $light-purple-600;
+$text-disabled: $light-purple-100;
+$text-on-primary: $white-color-base;
+$text-on-secondary: $white-color-base;
+
+// Transiciones
+$transition-fast: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Hover
+$primary-hover-color: $light-purple-300;
+$secondary-hover-color: $light-purple-800;
+
+/* toast variables */
+$toast-success-border: #64da4c;
+$toast-warning-border: #ffeeba;
+$toast-error-border: #e42b2b;
+$toast-info-border: #b8daff;
+
+$toast-success-color: #2b753c;
+$toast-warning-color: #856404;
+$toast-error-color: #7a1b25;
+$toast-info-color: #004085;
+
+$toast-success-icon: '\f058';
+$toast-warning-icon: '\f071';
+$toast-error-icon: '\f06a';
+$toast-info-icon: '\f05a';

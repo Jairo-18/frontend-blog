@@ -1,13 +1,27 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import {
+  MAT_DATE_LOCALE,
+  MAT_NATIVE_DATE_FORMATS,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs);
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
-    provideRouter(routes), provideClientHydration(withEventReplay())
-  ]
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideNativeDateAdapter(MAT_NATIVE_DATE_FORMATS),
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: { maxWidth: '700px', width: '95vw', padding: '40px' },
+    },
+    { provide: LOCALE_ID, useValue: 'es' },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-CO' },
+  ],
 };
