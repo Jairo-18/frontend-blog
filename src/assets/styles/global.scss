@@ -68,6 +68,9 @@
 .bg-base {
   width: 100%;
   min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0;
   background: $home-background;
   background-repeat: no-repeat;
