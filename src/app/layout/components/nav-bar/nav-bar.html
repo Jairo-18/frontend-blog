@@ -1,17 +1,36 @@
 <nav class="h-full">
-  <article class="flex h-full w-full content-between px-6 py-2 items-center text-white">
-    <section class="flex content-between w-[50%] items-center gap-x-3">
-      <mat-icon class=" ">book</mat-icon>
-      <mat-icon class="">local_movies</mat-icon>
-      <h1 class="text-base md:text-4xl font-medium md:font-bold cursor-pointer" routerLink="/home">
+  <article class="flex h-full w-full justify-between px-6 py-2 items-center text-white">
+    <section class="flex items-center gap-x-3">
+      <mat-icon>book</mat-icon>
+      <mat-icon>local_movies</mat-icon>
+      <h1
+        class="text-xl 2xl:text-3xl 3xl:text-4xl font-medium md:font-bold cursor-pointer"
+        routerLink="/home"
+      >
         CINE Y LIBROS
       </h1>
     </section>
-    <section
-      class="flex content-between w-[50%] items-center justify-end gap-x-3 font-bold text-2xl"
-    >
+
+    <section class="hidden md:flex items-center justify-end gap-x-3 font-bold text-2xl">
       <button matButton="elevated" routerLink="/auth/login">Iniciar Sesión</button>
-      <button matFab extended routerLink="/auth/register">Registrarse</button>
+      <button mat-fab extended routerLink="/auth/register">Registrarse</button>
+    </section>
+
+    <section class="flex md:hidden">
+      <button mat-icon-button [matMenuTriggerFor]="mobileMenu" aria-label="Menú móvil">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <mat-menu #mobileMenu="matMenu">
+        <button mat-menu-item routerLink="/auth/login">
+          <mat-icon>login</mat-icon>
+          <span>Iniciar Sesión</span>
+        </button>
+        <button mat-menu-item routerLink="/auth/register">
+          <mat-icon>person_add</mat-icon>
+          <span>Registrarse</span>
+        </button>
+      </mat-menu>
     </section>
   </article>
 </nav>

@@ -67,8 +67,10 @@
 
 .bg-base {
   width: 100%;
-  min-height: 100dvh;
+  min-height: 100vh;
+  color: $white-color-base;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 0;
@@ -76,6 +78,10 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+
+  @media (max-width: 768px) {
+    min-height: 100dvh;
+  }
 }
 
 .brand-footer {

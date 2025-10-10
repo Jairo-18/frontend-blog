@@ -1,12 +1,12 @@
 <div
-  class="border border-[#8458A6] flex flex-col bg-homeCard rounded-2xl p-[35px] shadow-lg hover:scale-[1.02] transition-transform duration-300 text-white min-w-[400px] max-w-[450px] min-h-[230px]"
+  class="border border-[#8458A6] flex flex-col bg-homeCard rounded-2xl p-[15px] 2xl:p-[25px] 3xl:p-[35px] shadow-lg hover:scale-[1.02] transition-transform duration-300 text-white w-[330px] lg:w-[310px] 2xl:w-[410px] 3xl:w-[450px] lg:h-[185px] 2xl:h-[200px] 3xl:h-[230px]"
 >
   <section class="flex items-center gap-3">
     <mat-icon>{{ data.icon }}</mat-icon>
-    <span class="font-bold text-[24px]">{{ data.tittle }}</span>
+    <span class="font-bold text-base 2xl:text-[20px] 3xl:text-[24px]">{{ data.tittle }}</span>
   </section>
-  <span class="text-[13px] mt-2">{{ data.subtitle }}</span>
-  <span class="text-[13px] mt-7">
+  <span class="text-xs md:text-[13px] mt-2">{{ data.subtitle }}</span>
+  <span class="text-xs md:text-[13px] mt-4 md:mt-7">
     {{ data.description }}
   </span>
 </div>

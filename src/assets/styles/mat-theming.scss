@@ -352,6 +352,19 @@ mat-form-field {
     transform: none;
     box-shadow: none;
   }
+
+  @media (max-width: 1536px) {
+    // height: 35px !important;
+    // width: 35px !important;
+    // font-size: 35px !important;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px !important;
+    // height: 25px !important;
+    // width: 25px !important;
+    // font-size: 25px !important;
+  }
 }
 
 .mat-mdc-raised-button {

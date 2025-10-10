@@ -1,7 +1,45 @@
-<article class="bg-base">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-[60px]">
+<article class="bg-base py-10 2xl:py-0 3xl:py-0">
+  <span class="font-bold text-xl lg:text-2xl 2xl:text-3xl 3xl:text-4xl"
+    >Descubre tu próxima obsesión</span
+  >
+  <div
+    class="max-w-[320px] lg:max-w-[570px] 2xl:max-w-[470px] 3xl:max-w-[570px] text-center mt-4 2xl:mt-6 3xl:mt-8"
+  >
+    <span class="font-medium text-xs 2xl:text-base 3xl:text-xl"
+      >Únete a una comunidad apasionada que comparte las mejores recomendaciones de películas y
+      libros. Encuentra tu próximo favorito a través de reseñas auténticas de usuarios como
+      tú.</span
+    >
+  </div>
+  <section class="flex items-center justify-end gap-x-3 font-bold text-2xl mt-4 2xl:mt-6 3xl:mt-8">
+    <button mat-fab extended routerLink="/auth/register">Comienza gratis</button>
+    <button matButton="elevated" routerLink="/auth/login">Ya tengo una cuenta</button>
+  </section>
+  <div
+    class="grid md:grid-cols-1 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-3 gap-[20px] 2xl:gap-[40px] 3xl:gap-[60px] mt-4 2xl:mt-6 3xl:mt-8"
+  >
     @for (card of menuCards; track card.tittle) {
     <app-home-card [data]="card"></app-home-card>
     }
+  </div>
+  <div
+    class="border border-transparent lg:border-[#8458A6] 2xl:border-[#8458A6] 3xl:border-[#8458A6] flex flex-col bg-transparent lg:bg-homeCard 2xl:bg-homeCard 3xl:bg-homeCard rounded-2xl p-[15px] 2xl:p-[25px] 3xl:p-[35px] text-white md:min-w-[400px] w-[330px] lg:w-[550px] 2xl:w-[650px] 3xl:w-[750px] 2xl:max-h-[200px] 3xl:max-h-[200px] items-center text-center mt-4 2xl:mt-6 3xl:mt-8"
+  >
+    <section class="flex items-center gap-3">
+      <span class="font-bold text-base 2xl:text-[20px] 3xl:text-[24px]">
+        ¿Listo para comenzar tu viaje de descubrimiento?
+      </span>
+    </section>
+
+    <span class="text-xs md:text-[13px] mt-2 md:mt-6">
+      Únete a miles de usuarios que ya están compartiendo y descubriendo contenido increíble
+    </span>
+
+    <section
+      class="flex items-center justify-end gap-x-3 font-bold text-2xl mt-2 2xl:mt-4 3xl:mt-6"
+    >
+      <button matButton="elevated" routerLink="/auth/login">Crear cuenta gratuita</button>
+      <button mat-fab extended routerLink="/auth/register">Iniciar sesión</button>
+    </section>
   </div>
 </article>
