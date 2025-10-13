@@ -1,1 +1,59 @@
-<article class="bg-base"><button matFab extended routerLink="/">VOLVER A INICIO</button></article>
+<article class="bg-base">
+  <section
+    class="my-8 flex flex-col bg-white text-black p-[25px] md:p-[50px] lg:p-[50px] 2xl:p-[50px] 3xl:p-[50px] rounded-3xl w-[90%] md:w-[490px] lg:w-[490px] 2xl:w-[490px] 3xl:w-[490px] items-center"
+  >
+    <div class="flex-row"><mat-icon>book</mat-icon><mat-icon>local_movies</mat-icon></div>
+    <span class="font-bold text-2xl">Únete a la comunidad</span>
+    <div class="w-[75%] text-center">
+      <span class="font-medium text-base text-[#7B7B7B]"
+        >Comparte tus recomendaciones favoritas y descubre nuevos contenidos</span
+      >
+    </div>
+    <form [formGroup]="form" class="mt-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Nombres y apellidos completos</mat-label>
+        <input matInput formControlName="fullName" />
+        <mat-icon matSuffix>person</mat-icon>
+        @if (form.get('fullName')?.hasError('required')) {
+        <mat-error>Nombres y apellidos requeridos</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput formControlName="email" />
+        <mat-icon matSuffix>email</mat-icon>
+        @if (form.get('email')?.hasError('required')) {
+        <mat-error>Correo electrónico requerido</mat-error>
+        } @if (form.get('email')?.hasError('email')) {
+        <mat-error>Correo electrónico inválido</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Contraseña</mat-label>
+        <input matInput formControlName="password" />
+        <mat-icon matSuffix>lock</mat-icon>
+        @if (form.get('password')?.hasError('required')) {
+        <mat-error>Contraseña es requerida</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Confirmar Contraseña</mat-label>
+        <input matInput formControlName="confirmPassword" />
+        <mat-icon matSuffix>lock</mat-icon>
+        @if (form.get('confirmPassword')?.hasError('required')) {
+        <mat-error>Debes confirmar tu contraseña</mat-error>
+        }
+      </mat-form-field>
+
+      <button mat-fab extended routerLink="/auth/login" (click)="register()" class="!w-full">
+        Crear cuenta
+      </button>
+    </form>
+
+    <div class="mt-6 flex-row">
+      <span class="font-medium text-sm">¿Ya tienes cuenta?</span>
+      <a class="font-medium text-sm text-[#9811FB]" routerLink="/auth/login">Iniciar sesion</a>
+    </div>
+  </section>
+</article>

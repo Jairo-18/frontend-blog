@@ -12,6 +12,9 @@
     </section>
 
     <section class="hidden md:flex items-center justify-end gap-x-3 font-bold text-2xl">
+      <button mat-fab extended routerLink="">
+        <mat-icon class="icon-small">home</mat-icon>Inicio
+      </button>
       <button matButton="elevated" routerLink="/auth/login">Iniciar Sesión</button>
       <button mat-fab extended routerLink="/auth/register">Registrarse</button>
     </section>
@@ -22,6 +25,10 @@
       </button>
 
       <mat-menu #mobileMenu="matMenu">
+        <button mat-menu-item routerLink="">
+          <mat-icon>home</mat-icon>
+          <span>Inicio</span>
+        </button>
         <button mat-menu-item routerLink="/auth/login">
           <mat-icon>login</mat-icon>
           <span>Iniciar Sesión</span>

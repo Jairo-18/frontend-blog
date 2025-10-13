@@ -5,9 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-
 @Component({
-  selector: 'app-register',
+  selector: 'app-recover-password',
   standalone: true,
   imports: [
     RouterLink,
@@ -17,24 +16,21 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     MatInputModule,
   ],
-  templateUrl: './register.html',
-  styleUrl: './register.scss',
+  templateUrl: './recover-password.html',
+  styleUrl: './recover-password.scss',
 })
-export class Register {
+export class RecoverPassword {
   form: FormGroup;
 
   private readonly _fb: FormBuilder = inject(FormBuilder);
 
   constructor() {
     this.form = this._fb.group({
-      fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required]],
     });
   }
 
-  register() {
+  RecoverPassword() {
     console.log('hola');
   }
 }
