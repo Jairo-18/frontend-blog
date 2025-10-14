@@ -1,22 +1,69 @@
 <nav class="h-full">
   <article class="flex h-full w-full justify-between px-6 py-2 items-center text-white">
-    <section class="flex items-center gap-x-3">
-      <mat-icon>book</mat-icon>
-      <mat-icon>local_movies</mat-icon>
+    <section class="flex items-center gap-x-3 w-[33%]">
+      <mat-icon class="icon-big">book</mat-icon>
+      <mat-icon class="icon-big">local_movies</mat-icon>
       <h1
-        class="text-xl 2xl:text-3xl 3xl:text-4xl font-medium md:font-bold cursor-pointer"
+        class="text-xl 2xl:text-3xl 3xl:text-4xl font-medium md:font-bold cursor-pointer hover:text-[#9811fb]"
         routerLink="/home"
       >
         CINE Y LIBROS
       </h1>
     </section>
 
-    <section class="hidden md:flex items-center justify-end gap-x-3 font-bold text-2xl">
-      <button mat-fab extended routerLink="">
-        <mat-icon class="icon-small">home</mat-icon>Inicio
+    <section class="hidden md:flex gap-4 w-[33%] justify-center">
+      <button
+        mat-fab
+        extended
+        [matMenuTriggerFor]="destokMenu"
+        class="!min-w-auto md:!min-w-auto lg:!min-w-[155px] 2xl:!min-w-[155px] 3xl:!min-w-[155px]"
+      >
+        Películas
       </button>
-      <button matButton="elevated" routerLink="/auth/login">Iniciar Sesión</button>
-      <button mat-fab extended routerLink="/auth/register">Registrarse</button>
+
+      <mat-menu #destokMenu="matMenu">
+        <button mat-menu-item routerLink="">
+          <!-- <mat-icon class="icon-small">home</mat-icon> -->
+          <span>Más recomendadas</span>
+        </button>
+        <button mat-menu-item routerLink=" ">
+          <!-- <mat-icon class="icon-small">login</mat-icon> -->
+          <span>Recientes</span>
+        </button>
+      </mat-menu>
+
+      <button
+        mat-fab
+        extended
+        [matMenuTriggerFor]="destokMenu2"
+        class="!min-w-auto md:!min-w-auto lg:!min-w-[155px] 2xl:!min-w-[155px] 3xl:!min-w-[155px]"
+      >
+        Libros
+      </button>
+
+      <mat-menu #destokMenu2="matMenu">
+        <button mat-menu-item routerLink="">
+          <!-- <mat-icon class="icon-small">home</mat-icon> -->
+          <span>Más recomendados</span>
+        </button>
+        <button mat-menu-item routerLink=" ">
+          <!-- <mat-icon class="icon-small">login</mat-icon> -->
+          <span>Recientes</span>
+        </button>
+      </mat-menu>
+    </section>
+
+    <section class="hidden md:flex items-center justify-end gap-x-3 font-bold text-2xl w-[33%]">
+      <button mat-fab extended routerLink="" class="!min-w-[115px]">
+        <!-- <mat-icon class="icon-small">home</mat-icon>  -->
+        Inicio
+      </button>
+      <button mat-stroked-button matStepperPrevious routerLink="/auth/login" class="!min-w-[115px]">
+        Iniciar Sesión
+      </button>
+      <button mat-fab extended routerLink="/auth/register" class="!min-w-[115px]">
+        Registrarse
+      </button>
     </section>
 
     <section class="flex md:hidden">

@@ -1,59 +1,129 @@
-<article class="bg-base">
-  <section
-    class="my-8 flex flex-col bg-white text-black p-[25px] md:p-[50px] lg:p-[50px] 2xl:p-[50px] 3xl:p-[50px] rounded-3xl w-[90%] md:w-[490px] lg:w-[490px] 2xl:w-[490px] 3xl:w-[490px] items-center"
-  >
-    <div class="flex-row"><mat-icon>book</mat-icon><mat-icon>local_movies</mat-icon></div>
-    <span class="font-bold text-2xl">Únete a la comunidad</span>
-    <div class="w-[75%] text-center">
-      <span class="font-medium text-base text-[#7B7B7B]"
-        >Comparte tus recomendaciones favoritas y descubre nuevos contenidos</span
-      >
-    </div>
-    <form [formGroup]="form" class="mt-4">
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Nombres y apellidos completos</mat-label>
-        <input matInput formControlName="fullName" />
-        <mat-icon matSuffix>person</mat-icon>
-        @if (form.get('fullName')?.hasError('required')) {
-        <mat-error>Nombres y apellidos requeridos</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Correo electrónico</mat-label>
-        <input matInput formControlName="email" />
-        <mat-icon matSuffix>email</mat-icon>
-        @if (form.get('email')?.hasError('required')) {
-        <mat-error>Correo electrónico requerido</mat-error>
-        } @if (form.get('email')?.hasError('email')) {
-        <mat-error>Correo electrónico inválido</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Contraseña</mat-label>
-        <input matInput formControlName="password" />
-        <mat-icon matSuffix>lock</mat-icon>
-        @if (form.get('password')?.hasError('required')) {
-        <mat-error>Contraseña es requerida</mat-error>
-        }
-      </mat-form-field>
+<app-auth-card
+  title="Únete a la comunidad"
+  subtitle="Comparte tus recomendaciones favoritas y descubre nuevos contenidos"
+>
+  <mat-horizontal-stepper [linear]="false" #stepper class="w-full">
+    <mat-step [stepControl]="personalInfoForm">
+      <form [formGroup]="personalInfoForm">
+        <ng-template matStepLabel>Información Personal</ng-template>
 
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Confirmar Contraseña</mat-label>
-        <input matInput formControlName="confirmPassword" />
-        <mat-icon matSuffix>lock</mat-icon>
-        @if (form.get('confirmPassword')?.hasError('required')) {
-        <mat-error>Debes confirmar tu contraseña</mat-error>
-        }
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="firstName" />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (personalInfoForm.get('firstName')?.hasError('required')) {
+          <mat-error>El nombre es requerido</mat-error>
+          }
+        </mat-form-field>
 
-      <button mat-fab extended routerLink="/auth/login" (click)="register()" class="!w-full">
-        Crear cuenta
-      </button>
-    </form>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Apellidos</mat-label>
+          <input matInput formControlName="lastName" />
+          <mat-icon matPrefix>person_outline</mat-icon>
+          @if (personalInfoForm.get('lastName')?.hasError('required')) {
+          <mat-error>Los apellidos son requeridos</mat-error>
+          }
+        </mat-form-field>
 
-    <div class="mt-6 flex-row">
-      <span class="font-medium text-sm">¿Ya tienes cuenta?</span>
-      <a class="font-medium text-sm text-[#9811FB]" routerLink="/auth/login">Iniciar sesion</a>
-    </div>
-  </section>
-</article>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>País</mat-label>
+          <input matInput formControlName="country" />
+          <mat-icon matPrefix>public</mat-icon>
+          @if (personalInfoForm.get('country')?.hasError('required')) {
+          <mat-error>El país es requerido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Celular</mat-label>
+          <input matInput formControlName="phone" type="tel" />
+          <mat-icon matPrefix>phone</mat-icon>
+          @if (personalInfoForm.get('phone')?.hasError('required')) {
+          <mat-error>El celular es requerido</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="flex justify-end mt-4">
+          <button mat-fab extended matStepperNext class="!w-full">
+            Siguiente
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="accountInfoForm">
+      <form [formGroup]="accountInfoForm">
+        <ng-template matStepLabel>Información de Cuenta</ng-template>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput formControlName="email" type="email" />
+          <mat-icon matPrefix>email</mat-icon>
+          @if (accountInfoForm.get('email')?.hasError('required')) {
+          <mat-error>Correo electrónico requerido</mat-error>
+          } @if (accountInfoForm.get('email')?.hasError('email')) {
+          <mat-error>Correo electrónico inválido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Mostrar/ocultar contraseña'"
+            [attr.aria-pressed]="!hidePassword"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (accountInfoForm.get('password')?.hasError('required')) {
+          <mat-error>La contraseña es requerida</mat-error>
+          } @if (accountInfoForm.get('password')?.hasError('minlength')) {
+          <mat-error>La contraseña debe tener al menos 6 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Confirmar Contraseña</mat-label>
+          <input
+            matInput
+            [type]="hideConfirmPassword ? 'password' : 'text'"
+            formControlName="confirmPassword"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="'Mostrar/ocultar contraseña de confirmación'"
+            [attr.aria-pressed]="!hideConfirmPassword"
+          >
+            <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (accountInfoForm.get('confirmPassword')?.hasError('required')) {
+          <mat-error>Debes confirmar tu contraseña</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="flex gap-2 mt-4">
+          <button mat-stroked-button matStepperPrevious class="flex-1">
+            <mat-icon>arrow_back</mat-icon>
+            Atrás
+          </button>
+          <button mat-fab extended (click)="register()" class="flex-1">Crear cuenta</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+  <div class="mt-3 md:mt-6 lg:mt-6 2xl:mt-6 3xl:mt-6 flex-row">
+    <span class="font-medium text-sm">¿Ya tienes cuenta?</span>
+    <a class="font-medium text-sm text-[#9811FB]" routerLink="/auth/login"> Iniciar sesión</a>
+  </div>
+</app-auth-card>

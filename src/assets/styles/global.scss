@@ -40,10 +40,6 @@
   }
 }
 
-.brand-side-bar {
-  background-color: $side-bar-background;
-}
-
 .brand-content-center {
   min-height: 100dvh;
   width: 100%;
@@ -95,6 +91,30 @@
   @media (max-width: 768px) {
     height: auto;
   }
+}
+
+.icon-big {
+  font-size: 45px !important;
+  width: 45px !important;
+  height: 45px !important;
+
+  @media (max-width: 768px) {
+    font-size: 35px !important;
+    width: 35px !important;
+    height: 35px !important;
+  }
+}
+
+.icon-medium {
+  font-size: 35px !important;
+  width: 35px !important;
+  height: 35px !important;
+}
+
+.icon-small {
+  font-size: 25px !important;
+  width: 25px !important;
+  height: 25px !important;
 }
 
 .font-noto-serif {

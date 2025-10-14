@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { AuthCard } from '../../components/auth-card/auth-card';
 @Component({
   selector: 'app-recover-password',
   standalone: true,
@@ -15,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     ReactiveFormsModule,
     MatInputModule,
+    AuthCard,
   ],
   templateUrl: './recover-password.html',
   styleUrl: './recover-password.scss',

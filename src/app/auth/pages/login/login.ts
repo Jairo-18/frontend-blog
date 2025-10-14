@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { AuthCard } from '../../components/auth-card/auth-card';
 
 @Component({
   selector: 'app-login',
@@ -16,12 +17,14 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     ReactiveFormsModule,
     MatInputModule,
+    AuthCard,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
   form: FormGroup;
+  hidePassword = true;
 
   private readonly _fb: FormBuilder = inject(FormBuilder);
 
@@ -34,5 +37,9 @@ export class Login {
 
   login() {
     console.log('hola');
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 }

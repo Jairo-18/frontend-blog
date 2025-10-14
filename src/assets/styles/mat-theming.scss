@@ -326,7 +326,6 @@ mat-form-field {
 .mat-mdc-button,
 .mat-mdc-raised-button,
 .mat-mdc-stroked-button,
-.mat-mdc-outlined-button,
 .mat-mdc-unelevated-button,
 .mat-mdc-fab,
 .mat-mdc-mini-fab,
@@ -354,16 +353,42 @@ mat-form-field {
   }
 
   @media (max-width: 1536px) {
-    // height: 35px !important;
-    // width: 35px !important;
-    // font-size: 35px !important;
   }
 
   @media (max-width: 768px) {
     font-size: 12px !important;
-    // height: 25px !important;
-    // width: 25px !important;
-    // font-size: 25px !important;
+  }
+}
+
+.mat-mdc-outlined-button {
+  border-radius: 8px !important;
+  min-height: 45px !important;
+  max-height: 45px !important;
+  transition: all 0.3s ease;
+  color: $black-color-base !important;
+  background-color: $white-color-base !important;
+
+  &:hover:not(:disabled) {
+    background-color: $light-purple-800 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  &:disabled {
+    transform: none;
+    box-shadow: none;
+  }
+
+  @media (max-width: 1536px) {
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px !important;
   }
 }
 
@@ -372,5 +397,29 @@ mat-form-field {
   &:hover:not(:disabled) {
     background-color: $light-purple-A700 !important;
     box-shadow: none !important;
+  }
+}
+
+.mat-mdc-form-field-error {
+  font-size: 14px !important;
+}
+
+.mat-mdc-form-field-label,
+.mdc-floating-label {
+  font-size: 14px !important;
+}
+
+.mat-horizontal-content-container {
+  padding: 10px 0 0 0 !important;
+}
+
+.mat-horizontal-stepper-header {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  padding: 0 24px;
+  height: var(--mat-stepper-header-height, 72px);
+  @media (max-width: 768px) {
+    height: 40px !important;
   }
 }

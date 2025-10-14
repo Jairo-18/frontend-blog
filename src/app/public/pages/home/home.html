@@ -13,7 +13,9 @@
   </div>
   <section class="flex items-center justify-end gap-x-3 font-bold text-2xl mt-4 2xl:mt-6 3xl:mt-8">
     <button mat-fab extended routerLink="/auth/register">Comienza gratis</button>
-    <button matButton="elevated" routerLink="/auth/login">Ya tengo una cuenta</button>
+    <button mat-stroked-button matStepperPrevious routerLink="/auth/login">
+      Ya tengo una cuenta
+    </button>
   </section>
   <div
     class="grid md:grid-cols-1 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-3 gap-[20px] 2xl:gap-[40px] 3xl:gap-[60px] mt-4 2xl:mt-6 3xl:mt-8"
@@ -38,7 +40,9 @@
     <section
       class="flex items-center justify-end gap-x-3 font-bold text-2xl mt-2 2xl:mt-4 3xl:mt-6"
     >
-      <button matButton="elevated" routerLink="/auth/register">Crear cuenta gratuita</button>
+      <button mat-stroked-button matStepperPrevious routerLink="/auth/register">
+        Crear cuenta gratuita
+      </button>
       <button mat-fab extended routerLink="/auth/login">Iniciar sesión</button>
     </section>
   </div>
