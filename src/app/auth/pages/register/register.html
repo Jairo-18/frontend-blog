@@ -8,27 +8,34 @@
         <ng-template matStepLabel>Información Personal</ng-template>
 
         <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Nombres</mat-label>
-          <input matInput formControlName="firstName" />
-          <mat-icon matPrefix>person</mat-icon>
-          @if (personalInfoForm.get('firstName')?.hasError('required')) {
-          <mat-error>El nombre es requerido</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Apellidos</mat-label>
-          <input matInput formControlName="lastName" />
+          <mat-label>Nombres Completos</mat-label>
+          <input matInput formControlName="fullName" />
           <mat-icon matPrefix>person_outline</mat-icon>
-          @if (personalInfoForm.get('lastName')?.hasError('required')) {
-          <mat-error>Los apellidos son requeridos</mat-error>
+          @if (personalInfoForm.get('fullName')?.hasError('required')) {
+          <mat-error>Los nombres y apellidos son requeridos</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>País</mat-label>
-          <input matInput formControlName="country" />
+          <!-- Icono de país/flag al inicio -->
           <mat-icon matPrefix>public</mat-icon>
+          <input matInput formControlName="country" [matAutocomplete]="auto" #countryInput />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            *ngIf="personalInfoForm.get('country')?.value"
+            (click)="personalInfoForm.get('country')?.setValue('')"
+            aria-label="Borrar país"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let country of filteredCountries | async" [value]="country">
+              {{ country }}
+            </mat-option>
+          </mat-autocomplete>
           @if (personalInfoForm.get('country')?.hasError('required')) {
           <mat-error>El país es requerido</mat-error>
           }
@@ -67,7 +74,7 @@
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="w-full">
+        <mat-form-field appearance="outline" class="w-full mb-6">
           <mat-label>Contraseña</mat-label>
           <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
           <mat-icon matPrefix>lock</mat-icon>
@@ -83,8 +90,11 @@
           </button>
           @if (accountInfoForm.get('password')?.hasError('required')) {
           <mat-error>La contraseña es requerida</mat-error>
-          } @if (accountInfoForm.get('password')?.hasError('minlength')) {
-          <mat-error>La contraseña debe tener al menos 6 caracteres</mat-error>
+          } @if (accountInfoForm.get('password')?.hasError('passwordStrength')) {
+          <mat-error>
+            La contraseña debe tener 6 caracteres, con mayúscula, minúscula y un carácter
+            especial.</mat-error
+          >
           }
         </mat-form-field>
 
@@ -94,6 +104,7 @@
             matInput
             [type]="hideConfirmPassword ? 'password' : 'text'"
             formControlName="confirmPassword"
+            (blur)="accountInfoForm.get('confirmPassword')?.markAsTouched()"
           />
           <mat-icon matPrefix>lock</mat-icon>
           <button
@@ -106,8 +117,11 @@
           >
             <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
+
           @if (accountInfoForm.get('confirmPassword')?.hasError('required')) {
-          <mat-error>Debes confirmar tu contraseña</mat-error>
+          <mat-error>Confirmar contraseña es requerido</mat-error>
+          } @if (accountInfoForm.hasError('passwordMismatch')) {
+          <mat-error>Las contraseñas no coinciden</mat-error>
           }
         </mat-form-field>
 
@@ -116,7 +130,7 @@
             <mat-icon>arrow_back</mat-icon>
             Atrás
           </button>
-          <button mat-fab extended (click)="register()" class="flex-1">Crear cuenta</button>
+          <button mat-fab extended (click)="registerSupabase()" class="flex-1">Crear cuenta</button>
         </div>
       </form>
     </mat-step>

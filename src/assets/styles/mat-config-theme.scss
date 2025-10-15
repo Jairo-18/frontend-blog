@@ -1,7 +1,8 @@
 @use 'variables' as *;
 @use '@angular/material' as mat;
 $error-red: #eb2f28;
-
+$success-color: #4caf50;
+$error-color: #f44336;
 $dark-primary-text: rgba(black, 0.87);
 $light-primary-text: white;
 

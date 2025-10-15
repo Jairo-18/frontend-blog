@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthCallBack } from './pages/auth-call-back/auth-call-back';
 
 export const authRoutes: Routes = [
   {
@@ -16,6 +17,14 @@ export const authRoutes: Routes = [
         path: 'recover-password',
         loadComponent: () =>
           import('./pages/recover-password/recover-password').then((m) => m.RecoverPassword),
+      },
+      {
+        path: 'callback',
+        component: AuthCallBack,
+      },
+      {
+        path: 'send-email',
+        loadComponent: () => import('./pages/send-email/send-email').then((m) => m.SendEmail),
       },
     ],
   },
