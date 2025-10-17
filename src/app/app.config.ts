@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 registerLocaleData(localeEs);
 
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideNativeDateAdapter(MAT_NATIVE_DATE_FORMATS),
+    provideHttpClient(withFetch()),
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
       useValue: { maxWidth: '700px', width: '95vw', padding: '40px' },

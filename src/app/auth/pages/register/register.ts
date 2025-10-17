@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AuthCard } from '../../components/auth-card/auth-card';
 import { CustomValidationsService } from '../../../shared/validators/customValidations.service';
-import { map, Observable, startWith } from 'rxjs';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { map, Observable, startWith, take } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
@@ -31,7 +31,6 @@ import { SupabaseService } from '../../services/supabase.service';
     AuthCard,
     MatAutocompleteModule,
     MatSelectModule,
-    HttpClientModule,
     CommonModule,
   ],
   templateUrl: './register.html',
@@ -55,7 +54,10 @@ export class Register implements OnInit {
   ngOnInit() {
     this._http
       .get<Country[]>('https://restcountries.com/v3.1/all?fields=name')
-      .pipe(map((res) => res.map((c) => c.name.common).sort()))
+      .pipe(
+        map((res) => res.map((c) => c.name.common).sort()),
+        take(1)
+      )
       .subscribe((countries) => {
         this.countries = countries;
         this.filteredCountries = this.personalInfoForm.get('country')!.valueChanges.pipe(
@@ -103,14 +105,13 @@ export class Register implements OnInit {
         ...this.personalInfoForm.value,
         ...this.accountInfoForm.value,
       };
-
       try {
         await this._supabaseService.signUp(data.email, data.password, {
           fullName: data.fullName,
+          email: data.email,
           country: data.country,
           phone: data.phone,
         });
-
         this._router.navigate(['/auth/send-email']);
       } catch (error: unknown) {
         console.error('Error registrando usuario:', error);

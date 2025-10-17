@@ -58,40 +58,14 @@ export class Login {
     const { email, password } = this.form.value;
 
     try {
-      const loginResult = await this._supabaseService.signIn(email, password);
-      const user = loginResult.user;
-
-      const pendingUserData = localStorage.getItem('pendingUserData');
-      if (pendingUserData) {
-        const data = JSON.parse(pendingUserData);
-        await this._supabaseService.insertUserData({
-          id: user?.id ?? '',
-          fullName: data.fullName,
-          country: data.country,
-          phone: data.phone,
-          email: data.email,
-          password: data.password,
-        });
-        localStorage.removeItem('pendingUserData');
-      }
-      setTimeout(() => {
-        this._router.navigate(['/']);
-        this._snackBarService.success('¡Bienvenido! Has iniciado sesión correctamente');
-      }, 1000);
-    } catch (error: unknown) {
-      console.error('Error al iniciar sesión o guardar datos:', error);
-
-      let message = 'Error al iniciar sesión. Intenta de nuevo.';
-
-      if (error instanceof Error) {
-        if (error.message.includes('Email not confirmed')) {
-          message = 'Por favor confirma tu correo electrónico';
-        } else {
-          message = error.message;
-        }
-      }
-
-      this._snackBarService.error(message);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const data = await this._supabaseService.signIn(email, password);
+      this._snackBarService.success('¡Bienvenido!');
+      this._router.navigate(['/home']);
+    } catch (err) {
+      this._snackBarService.error(
+        err instanceof Error ? err.message : 'Ocurrió un error inesperado.'
+      );
     } finally {
       this.isLoading = false;
     }

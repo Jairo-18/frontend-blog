@@ -6,19 +6,19 @@ import { CustomSnackbarComponent } from '../components/custom-snackbar.component
 export class SnackBarService {
   private _snackBar = inject(MatSnackBar);
 
-  success(message: string, duration = 3000) {
+  success(message: string, duration = 4000) {
     this.show(message, 'success', duration);
   }
 
-  error(message: string, duration = 3000) {
+  error(message: string, duration = 4000) {
     this.show(message, 'error', duration);
   }
 
-  info(message: string, duration = 3000) {
+  info(message: string, duration = 4000) {
     this.show(message, 'info', duration);
   }
 
-  warning(message: string, duration = 3000) {
+  warning(message: string, duration = 4000) {
     this.show(message, 'warning', duration);
   }
 

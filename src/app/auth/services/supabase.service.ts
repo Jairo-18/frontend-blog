@@ -1,26 +1,22 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
+import { SupabaseClient, User } from '@supabase/supabase-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SnackBarService } from '../../shared/services/snackBar.service';
+import { supabase } from '../../supabaseClient';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SupabaseService {
-  private supabase: SupabaseClient;
-  private currentUser = new BehaviorSubject<User | null>(null);
-  private isInitialized = new BehaviorSubject<boolean>(false);
-  private authInitialized = false;
+  private readonly supabase: SupabaseClient = supabase;
+  private readonly currentUser = new BehaviorSubject<User | null>(null);
+  private readonly isInitialized = new BehaviorSubject<boolean>(false);
   private readonly _router: Router = inject(Router);
   private readonly _snackBarService: SnackBarService = inject(SnackBarService);
+  private authInitialized = false;
 
   constructor() {
-    this.supabase = createClient(
-      'https://tpaoqoubdoapmdigtewc.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwYW9xb3ViZG9hcG1kaWd0ZXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0NjExMjcsImV4cCI6MjA3NjAzNzEyN30.2FA4BbyXVCVQ4kvuHsvlp4UjRtOScr5lOt9L_L175ZU'
-    );
-
     this.initializeAuth();
   }
 
@@ -43,22 +39,27 @@ export class SupabaseService {
         if (event === 'SIGNED_IN' && session?.user) {
           const pendingUserData = localStorage.getItem('pendingUserData');
           if (pendingUserData) {
-            const data = JSON.parse(pendingUserData);
-
             try {
-              await this.insertUserData({
-                id: session.user.id,
-                fullName: data.fullName,
-                country: data.country,
-                phone: data.phone,
-                email: data.email,
-                password: data.password,
+              const userData = JSON.parse(pendingUserData);
+              const { user } = session;
+
+              const { error: upsertError } = await this.supabase.from('profile').upsert({
+                id: user.id,
+                fullName: userData.fullName,
+                country: userData.country,
+                phone: userData.phone,
+                created_at: new Date(),
               });
 
+              if (upsertError) {
+                console.error('❌ Error al crear perfil tras confirmar correo:', upsertError);
+              } else {
+                this._snackBarService.success('Tu perfil ha sido creado correctamente');
+              }
+
               localStorage.removeItem('pendingUserData');
-              console.log('Datos guardados automáticamente tras confirmar correo');
             } catch (err) {
-              console.error('Error guardando datos después de confirmar correo:', err);
+              console.error('Error procesando pendingUserData:', err);
             }
           }
         }
@@ -96,59 +97,116 @@ export class SupabaseService {
     return this.isInitialized.asObservable();
   }
 
+  async signUp(
+    email: string,
+    password: string,
+    pendingUserData: { fullName: string; country: string; phone: string; email: string }
+  ) {
+    try {
+      const { data: existingProfile, error: fetchError } = await this.supabase
+        .from('profile')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        throw new Error('Error al verificar el correo. Inténtalo de nuevo.');
+      }
+
+      if (existingProfile) {
+        this._snackBarService.success('Este correo ya está registrado.');
+        throw new Error('Este correo ya está registrado.');
+      }
+
+      const { data, error } = await this.supabase.auth.signUp({ email, password });
+
+      if (error) {
+        if (
+          error.message.includes('User already registered') ||
+          error.message.includes('already been registered')
+        ) {
+          this._snackBarService.success('Este correo ya está registrado.');
+          throw new Error('Este correo ya está registrado.');
+        }
+        throw new Error('No se pudo completar el registro. Inténtalo de nuevo más tarde.');
+      }
+
+      const user = data.user;
+      if (!user) throw new Error('No se pudo crear el usuario. Inténtalo de nuevo.');
+
+      const { error: insertError } = await this.supabase.from('profile').insert({
+        id: user.id,
+        fullName: pendingUserData.fullName,
+        email: pendingUserData.email,
+        country: pendingUserData.country,
+        phone: pendingUserData.phone,
+        created_at: new Date(),
+      });
+
+      if (insertError) {
+        if (insertError.code === '23505' || insertError.message?.includes('duplicate')) {
+          this._snackBarService.success('Este correo ya está registrado.');
+          throw new Error('Este correo ya está registrado.');
+        }
+        throw new Error('Error al guardar tu información de perfil.');
+      }
+
+      this._snackBarService.success(
+        'Te has registrado correctamente. Revisa tu correo para activar tu cuenta.'
+      );
+      return data;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Error desconocido al registrarse.';
+      this._snackBarService.error(message);
+      throw err;
+    }
+  }
+
   async signIn(email: string, password: string) {
     const { data, error } = await this.supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) throw error;
+    if (error) {
+      if (error.message.includes('Invalid login credentials')) {
+        const { data: profile } = await this.supabase
+          .from('profile')
+          .select('id')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (profile) {
+          throw new Error(
+            'Este correo fue registrado con Google. Por favor, inicia sesión usando el botón de Google.'
+          );
+        }
+        this._snackBarService.error('Correo o contraseña incorrectos.');
+        throw new Error('Correo o contraseña incorrectos.');
+      }
+
+      throw new Error('Error al iniciar sesión. Inténtalo de nuevo más tarde.');
+    }
+
+    if (!data.session || !data.user) {
+      this._snackBarService.error(
+        'No se pudo iniciar sesión. Verifica tus datos e inténtalo nuevamente.'
+      );
+      throw new Error('No se pudo iniciar sesión. Verifica tus datos e inténtalo nuevamente.');
+    }
+
+    const { data: profile } = await this.supabase
+      .from('profile')
+      .select('id')
+      .eq('id', data.user.id)
+      .maybeSingle();
+
+    if (!profile) {
+      this._router.navigate(['/user/profile']);
+      this._snackBarService.info('Por favor completa tu perfil para continuar.');
+    }
 
     return data;
-  }
-
-  async signUp(
-    email: string,
-    password: string,
-    pendingUserData: { fullName: string; country: string; phone: string }
-  ) {
-    localStorage.setItem('pendingUserData', JSON.stringify({ ...pendingUserData, email }));
-
-    const { data, error } = await this.supabase.auth.signUp({
-      email,
-      password,
-    });
-    this._snackBarService.success('Te has registrado correctamente');
-    if (error) throw error;
-    return data;
-  }
-
-  async signOut() {
-    const { error } = await this.supabase.auth.signOut();
-    this._snackBarService.success('Sesión finalizada correctamente');
-    if (error) throw error;
-  }
-
-  async resetPassword(email: string) {
-    const { data, error } = await this.supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/update-password`,
-    });
-
-    if (error) throw error;
-    return data;
-  }
-
-  async updatePassword(newPassword: string) {
-    const { data, error } = await this.supabase.auth.updateUser({
-      password: newPassword,
-    });
-
-    if (error) throw error;
-    return data;
-  }
-
-  async getSession() {
-    return await this.supabase.auth.getSession();
   }
 
   async signInWithGoogle() {
@@ -168,7 +226,7 @@ export class SupabaseService {
       'width=500,height=600,scrollbars=no,resizable=no'
     );
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const check = setInterval(async () => {
         const { data: sessionData } = await this.supabase.auth.getSession();
 
@@ -176,12 +234,80 @@ export class SupabaseService {
           clearInterval(check);
           popup?.close();
 
-          this._router.navigate(['/home']);
-          this._snackBarService.success('¡Bienvenido! Has iniciado sesión correctamente');
+          const user = sessionData.session.user;
+          const email = user.email;
+
+          const { data: existingProfile, error: profileError } = await this.supabase
+            .from('profile')
+            .select('*')
+            .eq('email', email)
+            .maybeSingle();
+
+          if (profileError && profileError.code !== 'PGRST116') {
+            console.error('Error buscando perfil:', profileError);
+            reject(profileError);
+            return;
+          }
+
+          if (existingProfile && existingProfile.id !== user.id) {
+            await this.supabase.auth.signOut();
+            this._snackBarService.error(
+              'Este correo ya está registrado con email y contraseña. Usa ese método para iniciar sesión.'
+            );
+            reject(new Error('Email ya registrado con otro método'));
+            return;
+          }
+
+          if (existingProfile && existingProfile.id === user.id) {
+            this._router.navigate(['/']);
+            this._snackBarService.success('¡Bienvenido de nuevo!');
+            resolve(sessionData.session);
+            return;
+          }
+
+          const { full_name } = user.user_metadata;
+          const { error: insertError } = await this.supabase.from('profile').insert({
+            id: user.id,
+            email,
+            fullName: full_name || '',
+            created_at: new Date(),
+          });
+
+          if (insertError) {
+            console.error('Error creando perfil OAuth:', insertError);
+
+            if (insertError.code === '23505') {
+              await this.supabase.auth.signOut();
+              this._snackBarService.error(
+                'Este correo ya está registrado. Inicia sesión con tu método original.'
+              );
+              reject(new Error('Email duplicado'));
+              return;
+            }
+          }
+
+          this._router.navigate(['/user/profile']);
+          this._snackBarService.info('Completa tu perfil antes de continuar');
           resolve(sessionData.session);
         }
       }, 1000);
+
+      setTimeout(() => {
+        clearInterval(check);
+        popup?.close();
+        reject(new Error('Timeout esperando autenticación'));
+      }, 60000);
     });
+  }
+
+  async signOut() {
+    const { error } = await this.supabase.auth.signOut();
+    this._snackBarService.success('Sesión finalizada correctamente');
+    if (error) throw error;
+  }
+
+  async getSession() {
+    return await this.supabase.auth.getSession();
   }
 
   async getCurrentSession() {
@@ -209,18 +335,5 @@ export class SupabaseService {
         resolve(false);
       }, 1000);
     });
-  }
-
-  async insertUserData(userData: {
-    id: string;
-    fullName: string;
-    country: string;
-    phone: string;
-    email: string;
-    password: string;
-  }) {
-    const { data, error } = await this.supabase.from('UserInfo').insert([userData]);
-    if (error) throw error;
-    return data;
   }
 }

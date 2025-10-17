@@ -6,8 +6,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:ssr": "ng build --ssr",
-    "serve:ssr": "node dist/frontend-blog/server/server.mjs",
+    "build:ssr": "ng run frontend-blog:build:ssr",
+    "serve:ssr": "ng run frontend-blog:serve:ssr",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -39,6 +39,7 @@
     "@fontsource-variable/noto-serif": "^5.2.9",
     "@fortawesome/fontawesome-free": "^7.1.0",
     "@supabase/supabase-js": "^2.75.0",
+    "bcryptjs": "^3.0.2",
     "express": "^4.21.2",
     "rxjs": "~7.8.1",
     "tslib": "^2.8.1",
