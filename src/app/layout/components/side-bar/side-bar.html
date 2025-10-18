@@ -1,0 +1,99 @@
+<aside
+  [ngClass]="{
+    'flex flex-col bg-side-bar text-white transition-all duration-400 ease-in-out font-bold': true,
+    'w-16 !h-full items-center relative': isCollapsed,
+    'w-64 md:w-72 h-full p-2 fixed md:static z-50': !isCollapsed
+  }"
+>
+  <!-- Botón de toggle -->
+  <div
+    class="flex h-[6%] transition-all duration-400 ease-in-out"
+    [ngClass]="{
+      'mt-2 md:mt-4 justify-center': true
+    }"
+  >
+    <button
+      (click)="toggleSidebar()"
+      mat-icon-button
+      class="w-[40px] h-[40px] flex text-xl transition-all duration-400 ease-in-out bg-white rounded-full items-center justify-center border-[0.5px] border-black"
+    >
+      @if (isCollapsed) {
+      <mat-icon class="text-black">keyboard_arrow_right</mat-icon>
+      } @else {
+      <mat-icon class="text-black">close</mat-icon>
+      }
+    </button>
+  </div>
+
+  <!-- Lista del menú -->
+  <nav class="flex flex-col mt-4 gap-2 w-full relative flex-1">
+    @for (item of menuItems; track item.title) {
+    <!-- Ítem principal -->
+    <div
+      class="flex cursor-pointer p-2 rounded-md hover:bg-[#7d0fd1] transition duration-200 ease-in-out relative"
+      (click)="item.children ? toggleSubMenu(item.title) : null"
+      [routerLink]="!item.children ? item.route : null"
+      [ngClass]="{
+        'items-center justify-center': isCollapsed,
+        'items-center justify-between pl-2 pr-2 gap-3': !isCollapsed
+      }"
+    >
+      <mat-icon>{{ item.icon }}</mat-icon>
+
+      @if (!isCollapsed) {
+      <span class="truncate flex-1">{{ item.title }}</span>
+      } @if (item.children && !isCollapsed) {
+      <mat-icon>
+        {{ openSubMenu[item.title] ? 'expand_less' : 'expand_more' }}
+      </mat-icon>
+      }
+
+      <!-- SUBMENÚ flotante si el sidebar está cerrado -->
+      @if (item.children && openSubMenu[item.title] && isCollapsed) {
+      <div
+        class="absolute left-full top-0 ml-2 bg-[#7d0fd1] text-white rounded-md shadow-lg flex flex-col w-64 py-2 z-[9999]"
+      >
+        @for (child of item.children; track child.title) {
+        <a
+          [routerLink]="child.route"
+          class="flex items-center gap-2 p-2 hover:bg-[#8a25e0] rounded transition"
+        >
+          <mat-icon class="text-sm">{{ child.icon }}</mat-icon>
+          <span>{{ child.title }}</span>
+        </a>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Submenú normal cuando está expandido -->
+    @if (item.children && openSubMenu[item.title] && !isCollapsed) {
+    <div class="pl-8 flex flex-col gap-1">
+      @for (child of item.children; track child.title) {
+      <a
+        [routerLink]="child.route"
+        class="flex items-center gap-2 cursor-pointer p-1 rounded hover:bg-[#7d0fd1] transition"
+      >
+        <mat-icon class="text-sm">{{ child.icon }}</mat-icon>
+        <span>{{ child.title }}</span>
+      </a>
+      }
+    </div>
+    } }
+  </nav>
+
+  <!-- 🔹 Botón de cerrar sesión -->
+  <div
+    class="mt-auto mb-2 w-full cursor-pointer p-2 rounded-md hover:bg-[#7d0fd1] transition duration-200 ease-in-out flex items-center"
+    [ngClass]="{
+      'justify-center': isCollapsed,
+      'justify-start gap-3 pl-3': !isCollapsed
+    }"
+    (click)="signOut()"
+  >
+    <mat-icon>logout</mat-icon>
+    @if (!isCollapsed) {
+    <span class="truncate">Cerrar sesión</span>
+    }
+  </div>
+</aside>

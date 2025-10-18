@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { DefaultLayout } from './layout/pages/default-layout/default-layout';
-import { noAuthGuard } from './shared/noAuth.guard';
+import { noAuthGuard } from './shared/guards/noAuth.guard';
 
 export const routes: Routes = [
   {

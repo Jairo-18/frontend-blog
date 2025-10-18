@@ -4,15 +4,15 @@ import { NavBar } from '../../components/nav-bar/nav-bar';
 import { SupabaseService } from '../../../auth/services/supabase.service';
 import { Subscription } from 'rxjs';
 import { MatSpinner } from '@angular/material/progress-spinner';
+import { SideBar } from '../../components/side-bar/side-bar';
 
 @Component({
   selector: 'app-default-layout',
   standalone: true,
-  imports: [RouterOutlet, NavBar, MatSpinner],
+  imports: [RouterOutlet, NavBar, MatSpinner, SideBar],
   templateUrl: './default-layout.html',
   styleUrl: './default-layout.scss',
 })
-// default-layout.component.ts
 export class DefaultLayout implements OnInit, OnDestroy {
   private readonly _supabaseService: SupabaseService = inject(SupabaseService);
   private sub?: Subscription;

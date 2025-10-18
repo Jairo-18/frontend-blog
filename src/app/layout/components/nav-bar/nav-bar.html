@@ -23,13 +23,13 @@
         <button
           mat-fab
           extended
-          [matMenuTriggerFor]="destokMenu"
+          [matMenuTriggerFor]="destokMenuCine"
           class="!min-w-auto md:!min-w-auto lg:!min-w-[100px] 2xl:!min-w-[155px] 3xl:!min-w-[155px]"
         >
           Películas
         </button>
 
-        <mat-menu #destokMenu="matMenu">
+        <mat-menu #destokMenuCine="matMenu">
           <button mat-menu-item routerLink="">
             <span>Más recomendadas</span>
           </button>
@@ -41,13 +41,13 @@
         <button
           mat-fab
           extended
-          [matMenuTriggerFor]="destokMenu2"
+          [matMenuTriggerFor]="destokMenuBook"
           class="!min-w-auto md:!min-w-auto lg:!min-w-[100px] 2xl:!min-w-[155px] 3xl:!min-w-[155px]"
         >
           Libros
         </button>
 
-        <mat-menu #destokMenu2="matMenu">
+        <mat-menu #destokMenuBook="matMenu">
           <button mat-menu-item routerLink="">
             <!-- <mat-icon class="icon-small">home</mat-icon> -->
             <span>Más recomendados</span>
@@ -63,18 +63,18 @@
     <section
       class="hidden md:flex items-center justify-end gap-x-3 font-bold text-2xl w-[10%] md:w-[50%] lg:w-[50%] 2xl:w-[30%] 3xl:w-[55%]"
     >
-      @if (!isLoggedIn) {
       <button mat-stroked-button routerLink="/auth/login" class="!min-w-[115px]">
         Iniciar Sesión
       </button>
       <button mat-fab extended routerLink="/auth/register" class="!min-w-[115px]">
-        Registrarse</button
-      >} @else {
-      <button mat-stroked-button class="!min-w-[115px]" (click)="signOut()">Cerrar Sesión</button>
-      }
+        Registrarse
+      </button>
     </section>
 
-    <section class="flex md:hidden">
+    <section
+      class="flex md:hidden items-center justify-end gap-x-3 font-bold text-2xl w-[10%] md:w-[50%] lg:w-[50%] 2xl:w-[30%] 3xl:w-[55%]"
+    >
+      @if (!isLoggedIn) {
       <button mat-icon-button [matMenuTriggerFor]="mobileMenu" aria-label="Menú móvil">
         <mat-icon>menu</mat-icon>
       </button>
@@ -93,6 +93,49 @@
           <span>Registrarse</span>
         </button>
       </mat-menu>
+
+      } @else {
+      <button mat-icon-button [matMenuTriggerFor]="mobileMenu" aria-label="Menú móvil">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <mat-menu #mobileMenu="matMenu">
+        <!-- Películas -->
+        <button mat-menu-item [matMenuTriggerFor]="mobileMenuCine">
+          <mat-icon>movie</mat-icon>
+          <span>Películas</span>
+        </button>
+
+        <mat-menu #mobileMenuCine="matMenu">
+          <button mat-menu-item routerLink="">
+            <span>Más recomendadas</span>
+          </button>
+          <button mat-menu-item routerLink="">
+            <span>Recientes</span>
+          </button>
+        </mat-menu>
+
+        <!-- Libros -->
+        <button mat-menu-item [matMenuTriggerFor]="mobileMenuBook">
+          <mat-icon>book</mat-icon>
+          <span>Libros</span>
+        </button>
+
+        <mat-menu #mobileMenuBook="matMenu">
+          <button mat-menu-item routerLink="">
+            <span>Más recomendados</span>
+          </button>
+          <button mat-menu-item routerLink="">
+            <span>Recientes</span>
+          </button>
+        </mat-menu>
+
+        <button mat-menu-item (click)="signOut()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </mat-menu>
+      }
     </section>
   </article>
 </nav>

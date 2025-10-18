@@ -29,6 +29,7 @@
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  background-color: white;
 
   &.mobile-margin-left {
     margin-left: 75px;
@@ -36,8 +37,13 @@
 
     @media (min-width: 768px) {
       margin-left: 0;
+      height: 100dvh;
     }
   }
+}
+
+.bg-side-bar {
+  background: $nav-bar-background;
 }
 
 .brand-content-center {
@@ -64,19 +70,25 @@
 .bg-base {
   width: 100%;
   min-height: 100vh;
-  color: $white-color-base;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 0;
-  background: $home-background;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  color: $white-color-base;
 
   @media (max-width: 768px) {
-    min-height: 100dvh;
+  }
+
+  &.bg-guest {
+    background: $home-background;
+  }
+
+  &.bg-logged {
+    background-color: white;
   }
 }
 
@@ -222,4 +234,12 @@
 
 .center-text {
   text-align: center !important;
+}
+
+.bg-guest {
+  color: white;
+}
+
+.bg-logged {
+  color: black;
 }
