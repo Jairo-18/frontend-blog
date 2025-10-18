@@ -39,8 +39,8 @@ import { SupabaseService } from '../../services/supabase.service';
 export class Register implements OnInit {
   personalInfoForm: FormGroup;
   accountInfoForm: FormGroup;
-  hidePassword = true;
-  hideConfirmPassword = true;
+  hidePassword: boolean = true;
+  hideConfirmPassword: boolean = true;
   countries: string[] = [];
   filteredCountries: Observable<string[]> = new Observable();
 

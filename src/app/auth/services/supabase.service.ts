@@ -14,7 +14,7 @@ export class SupabaseService {
   private readonly isInitialized = new BehaviorSubject<boolean>(false);
   private readonly _router: Router = inject(Router);
   private readonly _snackBarService: SnackBarService = inject(SnackBarService);
-  private authInitialized = false;
+  private authInitialized: boolean = false;
 
   constructor() {
     this.initializeAuth();
@@ -286,7 +286,7 @@ export class SupabaseService {
             }
           }
 
-          this._router.navigate(['/user/profile']);
+          this._router.navigate(['/profile/register-profile']);
           this._snackBarService.info('Completa tu perfil antes de continuar');
           resolve(sessionData.session);
         }
@@ -335,5 +335,51 @@ export class SupabaseService {
         resolve(false);
       }, 1000);
     });
+  }
+
+  async getProfile(userId: string) {
+    const { data, error } = await this.supabase
+      .from('profile')
+      .select('id, fullName, country, username, bibliography, phone, email')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error obteniendo perfil:', error);
+      return null;
+    }
+
+    return data;
+  }
+
+  async getCurrentUserProfile() {
+    const user = this.currentUserValue;
+    if (!user) return null;
+
+    return await this.getProfile(user.id);
+  }
+
+  async updateProfile(
+    userId: string,
+    profileData: {
+      username?: string;
+      country?: string;
+      phone?: string;
+      bibliography?: string;
+    }
+  ) {
+    const { data, error } = await this.supabase
+      .from('profile')
+      .update(profileData)
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error actualizando perfil:', error);
+      throw error;
+    }
+
+    return data;
   }
 }

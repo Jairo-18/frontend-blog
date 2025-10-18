@@ -32,9 +32,9 @@ import { SnackBarService } from '../../../shared/services/snackBar.service';
 })
 export class Login {
   form: FormGroup;
-  hidePassword = true;
-  isLoading = false;
-  isGoogleLoading = false;
+  hidePassword: boolean = true;
+  isLoading: boolean = false;
+  isGoogleLoading: boolean = false;
 
   private readonly _fb: FormBuilder = inject(FormBuilder);
   private readonly _supabaseService: SupabaseService = inject(SupabaseService);

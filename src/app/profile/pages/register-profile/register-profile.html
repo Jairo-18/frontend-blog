@@ -1,0 +1,74 @@
+<app-auth-card title="Llena el formulario" subtitle="Ingresa los datos para completar tu perfil">
+  <form [formGroup]="complementInfo" class="mt-2">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Nombre de usuario</mat-label>
+      <input matInput formControlName="username" type="tel" />
+      <mat-icon matPrefix>person</mat-icon>
+      @if (complementInfo.get('username')?.hasError('required')) {
+      <mat-error>El nombre de usuario es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Bibliografía</mat-label>
+      <textarea
+        matInput
+        formControlName="bibliography"
+        rows="4"
+        placeholder="Escribe tu biografía aquí..."
+      ></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      @if (complementInfo.get('bibliography')?.hasError('required') &&
+      complementInfo.get('bibliography')?.touched) {
+      <mat-error>La Bibliografía es requerida</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>País</mat-label>
+      <mat-icon matPrefix>public</mat-icon>
+      <input matInput formControlName="country" [matAutocomplete]="auto" #countryInput />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        *ngIf="complementInfo.get('country')?.value"
+        (click)="complementInfo.get('country')?.setValue('')"
+        aria-label="Borrar país"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let country of filteredCountries | async" [value]="country">
+          {{ country }}
+        </mat-option>
+      </mat-autocomplete>
+      @if (complementInfo.get('country')?.hasError('required')) {
+      <mat-error>El país es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Celular</mat-label>
+      <input matInput formControlName="phone" type="tel" />
+      <mat-icon matPrefix>phone</mat-icon>
+      @if (complementInfo.get('phone')?.hasError('required')) {
+      <mat-error>El celular es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      class="!w-full"
+      [disabled]="isSubmitting"
+      (click)="registerProfile()"
+    >
+      @if (isSubmitting) {
+      <span>Guardando...</span>
+      } @else {
+      <span>Terminar</span>
+      }
+    </button>
+  </form>
+</app-auth-card>

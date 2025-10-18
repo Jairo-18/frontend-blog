@@ -14,7 +14,7 @@ export const SIDEBAR_ITEMS: SideBarItem[] = [
       {
         icon: 'visibility',
         title: 'Ver perfil',
-        route: '/profile/view',
+        route: '/profile/user-profile',
       },
       {
         icon: 'lock',
@@ -62,5 +62,17 @@ export const SIDEBAR_ITEMS: SideBarItem[] = [
     title: 'Configuración',
     route: '/admin/config',
     role: 'admin',
+    children: [
+      {
+        icon: 'people',
+        title: 'Ver usuarios',
+        route: '/organizational/see-users',
+      },
+      // {
+      //   icon: 'star_rate',
+      //   title: 'Mejores reseñas',
+      //   route: '/books/top-rated',
+      // },
+    ],
   },
 ];

@@ -25,6 +25,7 @@ export class SideBar {
 
   private readonly _supabaseService: SupabaseService = inject(SupabaseService);
   private readonly _router: Router = inject(Router);
+  private readonly _ngZone = inject(NgZone);
 
   toggleSidebar(): void {
     this.isCollapsed = !this.isCollapsed;
@@ -33,26 +34,24 @@ export class SideBar {
   }
 
   toggleSubMenu(title: string): void {
-    // 👉 Si está colapsado, expandimos el sidebar primero
     if (this.isCollapsed) {
       this.isCollapsed = false;
       this.collapsed.emit(this.isCollapsed);
     }
 
-    // 👉 Cerramos todos los submenús antes de abrir el nuevo
-    Object.keys(this.openSubMenu).forEach((key) => {
-      this.openSubMenu[key] = false;
-    });
-
-    // 👉 Alternamos el estado del submenú seleccionado
-    this.openSubMenu[title] = !this.openSubMenu[title];
+    if (this.openSubMenu[title]) {
+      this.openSubMenu[title] = false;
+    } else {
+      Object.keys(this.openSubMenu).forEach((key) => {
+        this.openSubMenu[key] = false;
+      });
+      this.openSubMenu[title] = true;
+    }
   }
 
   closeAllSubMenus(): void {
     this.openSubMenu = {};
   }
-
-  private readonly _ngZone = inject(NgZone);
 
   async signOut() {
     try {

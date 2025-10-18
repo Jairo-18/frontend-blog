@@ -5,7 +5,6 @@
     'w-64 md:w-72 h-full p-2 fixed md:static z-50': !isCollapsed
   }"
 >
-  <!-- Botón de toggle -->
   <div
     class="flex h-[6%] transition-all duration-400 ease-in-out"
     [ngClass]="{
@@ -25,10 +24,9 @@
     </button>
   </div>
 
-  <!-- Lista del menú -->
   <nav class="flex flex-col mt-4 gap-2 w-full relative flex-1">
     @for (item of menuItems; track item.title) {
-    <!-- Ítem principal -->
+
     <div
       class="flex cursor-pointer p-2 rounded-md hover:bg-[#7d0fd1] transition duration-200 ease-in-out relative"
       (click)="item.children ? toggleSubMenu(item.title) : null"
@@ -46,10 +44,7 @@
       <mat-icon>
         {{ openSubMenu[item.title] ? 'expand_less' : 'expand_more' }}
       </mat-icon>
-      }
-
-      <!-- SUBMENÚ flotante si el sidebar está cerrado -->
-      @if (item.children && openSubMenu[item.title] && isCollapsed) {
+      } @if (item.children && openSubMenu[item.title] && isCollapsed) {
       <div
         class="absolute left-full top-0 ml-2 bg-[#7d0fd1] text-white rounded-md shadow-lg flex flex-col w-64 py-2 z-[9999]"
       >
@@ -66,7 +61,6 @@
       }
     </div>
 
-    <!-- Submenú normal cuando está expandido -->
     @if (item.children && openSubMenu[item.title] && !isCollapsed) {
     <div class="pl-8 flex flex-col gap-1">
       @for (child of item.children; track child.title) {
@@ -82,7 +76,6 @@
     } }
   </nav>
 
-  <!-- 🔹 Botón de cerrar sesión -->
   <div
     class="mt-auto mb-2 w-full cursor-pointer p-2 rounded-md hover:bg-[#7d0fd1] transition duration-200 ease-in-out flex items-center"
     [ngClass]="{

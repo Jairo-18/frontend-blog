@@ -1,0 +1,52 @@
+<article>
+  <section class="w-full h-[440px] relative overflow-hidden">
+    <div class="absolute inset-0 bg-fondo"></div>
+
+    <div
+      class="absolute inset-10 bg-gradient-to-r from-[#ff9a76]/80 via-[#ff6b6b]/70 to-[#ffcc70]/80 mix-blend-overlay"
+    ></div>
+
+    <div
+      class="relative z-10 flex flex-col md:flex-row items-center justify-center h-full text- text-center px-6 gap-8"
+    >
+      <section
+        class="w-full md:w-[30%] bg-[#F0F4F9] border-[0.5px] border-[#7B7B7B] shadow-xl rounded-lg p-6"
+      >
+        @if (loading) {
+        <div class="text-gray-600">Cargando perfil...</div>
+        } @if (!loading && profile) {
+        <div class="space-y-3">
+          <h2 class="text-2xl font-bold text-gray-800">
+            {{ profile.fullName }}
+          </h2>
+
+          @if (profile.country) {
+          <p class="text-gray-600 flex items-center justify-center gap-2">
+            <span>📍</span>
+            <span>{{ profile.country }}</span>
+          </p>
+          } @if (profile.email || profile.phone) {
+          <div class="text-sm text-gray-600 space-y-1 pt-2">
+            @if (profile.email) {
+            <p>✉️ {{ profile.email }}</p>
+            } @if (profile.phone) {
+            <p>📞 {{ profile.phone }}</p>
+            } @if (profile.username) {
+            <p>📞 {{ profile.username }}</p>
+            }
+          </div>
+          }
+        </div>
+        } @if (!loading && !profile) {
+        <div class="text-gray-600">No se pudo cargar el perfil</div>
+        }
+      </section>
+
+      <section
+        class="w-full md:w-[50%] bg-[#F0F4F9] border-[0.5px] border-[#7B7B7B] shadow-xl rounded-lg p-6"
+      >
+        <!-- Aquí puedes agregar más contenido -->
+      </section>
+    </div>
+  </section>
+</article>

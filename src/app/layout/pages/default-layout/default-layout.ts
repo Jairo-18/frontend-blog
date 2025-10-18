@@ -1,8 +1,8 @@
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NavBar } from '../../components/nav-bar/nav-bar';
 import { SupabaseService } from '../../../auth/services/supabase.service';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { MatSpinner } from '@angular/material/progress-spinner';
 import { SideBar } from '../../components/side-bar/side-bar';
 
@@ -17,10 +17,25 @@ export class DefaultLayout implements OnInit, OnDestroy {
   private readonly _supabaseService: SupabaseService = inject(SupabaseService);
   private sub?: Subscription;
   private initSub?: Subscription;
+  private readonly _router: Router = inject(Router);
 
+  showSidebar = true;
   isReady = false;
   isLoggedIn = false;
   isInitializing = true;
+
+  constructor() {
+    this._router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((event: any) => {
+        const hideSidebarRoutes = ['/profile/register-profile'];
+
+        this.showSidebar = !hideSidebarRoutes.some((route) =>
+          event.urlAfterRedirects.includes(route)
+        );
+      });
+  }
 
   async ngOnInit() {
     this.initSub = this._supabaseService.isInitialized$.subscribe(async (initialized) => {
