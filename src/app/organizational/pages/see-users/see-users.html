@@ -1,1 +1,99 @@
-<p class="text-black">see-users works!</p>
+<!-- Mostrar spinner mientras carga -->
+@if (loading) {
+<div class="flex justify-center items-center py-10">
+  <mat-spinner></mat-spinner>
+</div>
+} @else {
+
+<div class="brand-content-center">
+  <section class="border-[0.5px] border-[#757575] p-10 rounded-lg bg-[#F0F4F9]">
+    <p class="text-2xl font-bold mb-6 text-gray-800">Panel Administrativo - Usuarios</p>
+    <p class="mb-4 text-gray-700">
+      Aquí puedes ver la lista de usuarios registrados en la plataforma
+    </p>
+    <table
+      mat-table
+      [dataSource]="users"
+      class="mat-elevation-z8 w-full border border-gray-200 rounded-lg overflow-hidden"
+    >
+      <!-- Nombre completo -->
+      <ng-container matColumnDef="fullName">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-purple-100 text-left text-sm text-gray-700 font-semibold px-4 py-2 border-b border-purple-300"
+        >
+          Nombre completo
+        </th>
+        <td mat-cell *matCellDef="let user" class="px-4 py-3 border-b border-gray-200">
+          {{ user.fullName }}
+        </td>
+      </ng-container>
+
+      <!-- Correo -->
+      <ng-container matColumnDef="email">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-purple-100 text-left text-sm text-gray-700 font-semibold px-4 py-2 border-b border-purple-300"
+        >
+          Correo
+        </th>
+        <td mat-cell *matCellDef="let user" class="px-4 py-3 border-b border-gray-200">
+          {{ user.email }}
+        </td>
+      </ng-container>
+
+      <!-- País -->
+      <ng-container matColumnDef="country">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-purple-100 text-left text-sm text-gray-700 font-semibold px-4 py-2 border-b border-purple-300"
+        >
+          País
+        </th>
+        <td mat-cell *matCellDef="let user" class="px-4 py-3 border-b border-gray-200">
+          {{ user.country }}
+        </td>
+      </ng-container>
+
+      <!-- Teléfono -->
+      <ng-container matColumnDef="phone">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-purple-100 text-left text-sm text-gray-700 font-semibold px-4 py-2 border-b border-purple-300"
+        >
+          Teléfono
+        </th>
+        <td mat-cell *matCellDef="let user" class="px-4 py-3 border-b border-gray-200">
+          {{ user.phone }}
+        </td>
+      </ng-container>
+
+      <!-- Fecha de creación -->
+      <ng-container matColumnDef="created_at">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-purple-100 text-left text-sm text-gray-700 font-semibold px-4 py-2 border-b border-purple-300"
+        >
+          Creado
+        </th>
+        <td mat-cell *matCellDef="let user" class="px-4 py-3 border-b border-gray-200">
+          {{ user.created_at | date : 'short' }}
+        </td>
+      </ng-container>
+
+      <!-- Cabecera y filas -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="border-b"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="hover:bg-gray-50 transition-colors duration-200"
+      ></tr>
+    </table>
+  </section>
+</div>
+}
