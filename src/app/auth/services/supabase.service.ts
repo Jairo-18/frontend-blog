@@ -340,7 +340,7 @@ export class SupabaseService {
   async getProfile(userId: string) {
     const { data, error } = await this.supabase
       .from('profile')
-      .select('id, fullName, country, username, bibliography, phone, email')
+      .select('id, fullName, country, username, bibliography, phone, email, created_at')
       .eq('id', userId)
       .single();
 
