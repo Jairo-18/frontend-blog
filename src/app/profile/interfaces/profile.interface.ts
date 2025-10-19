@@ -6,4 +6,5 @@ export interface Profile {
   username?: string;
   bibliography?: string;
   email?: string;
+  created_at: Date;
 }
