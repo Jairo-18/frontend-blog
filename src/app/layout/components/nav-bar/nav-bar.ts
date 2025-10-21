@@ -1,10 +1,10 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Router, RouterLink } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { SupabaseService } from '../../../auth/services/supabase.service';
 import { distinctUntilChanged, Subscription } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-nav-bar',
@@ -15,7 +15,6 @@ import { distinctUntilChanged, Subscription } from 'rxjs';
 })
 export class NavBar implements OnInit, OnDestroy {
   private readonly _supabaseService: SupabaseService = inject(SupabaseService);
-  private readonly _router: Router = inject(Router);
   private sub?: Subscription;
   isReady = false;
   isLoggedIn = false;
@@ -31,15 +30,5 @@ export class NavBar implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-  }
-
-  async signOut() {
-    try {
-      await this._supabaseService.signOut();
-      this.isLoggedIn = false;
-      await this._router.navigate(['/auth/login']);
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
   }
 }

@@ -3,9 +3,9 @@ import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { SideBarItem } from '../../interfaces/layout.interface';
 import { SIDEBAR_ITEMS } from '../../constants/layout.constants';
-import { Router, RouterLink } from '@angular/router';
-import { SupabaseService } from '../../../auth/services/supabase.service';
-import { NgZone } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { SignInService } from '../../../auth/services/signIn.service';
+import { SnackBarService } from '../../../shared/services/snackBar.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -18,14 +18,13 @@ export class SideBar {
   @Input() closeSideBar: boolean = false;
   @Output() collapsed: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  isLoggedIn = false;
+  isLoggedIn: boolean = false;
   isCollapsed: boolean = true;
   openSubMenu: Record<string, boolean> = {};
   menuItems: SideBarItem[] = SIDEBAR_ITEMS;
 
-  private readonly _supabaseService: SupabaseService = inject(SupabaseService);
-  private readonly _router: Router = inject(Router);
-  private readonly _ngZone = inject(NgZone);
+  private readonly _singInService: SignInService = inject(SignInService);
+  private readonly _snackBarService: SnackBarService = inject(SnackBarService);
 
   toggleSidebar(): void {
     this.isCollapsed = !this.isCollapsed;
@@ -55,14 +54,11 @@ export class SideBar {
 
   async signOut() {
     try {
-      await this._supabaseService.signOut();
+      await this._singInService.signOut();
       this.isLoggedIn = false;
-
-      this._ngZone.run(async () => {
-        await this._router.navigate(['/auth/login']);
-      });
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
+      this._snackBarService.error('Error al cerrar sesión');
     }
   }
 }

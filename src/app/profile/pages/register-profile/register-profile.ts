@@ -47,7 +47,7 @@ export class RegisterProfile implements OnInit {
       username: ['', [Validators.required]],
       country: ['', [Validators.required]],
       phone: ['', [Validators.required]],
-      bibliography: ['', [Validators.required]],
+      bibliography: [''],
     });
   }
 

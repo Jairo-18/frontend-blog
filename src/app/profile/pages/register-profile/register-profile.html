@@ -18,10 +18,6 @@
         placeholder="Escribe tu biografía aquí..."
       ></textarea>
       <mat-icon matPrefix>description</mat-icon>
-      @if (complementInfo.get('bibliography')?.hasError('required') &&
-      complementInfo.get('bibliography')?.touched) {
-      <mat-error>La Bibliografía es requerida</mat-error>
-      }
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full">

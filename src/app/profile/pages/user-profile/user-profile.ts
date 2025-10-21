@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { SupabaseService } from '../../../auth/services/supabase.service';
-import { Profile } from '../../interfaces/profile.interface';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
+import { ProfileInterface } from '../../interfaces/profile.interface';
 
 @Component({
   selector: 'app-user-profile',
@@ -12,7 +12,7 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './user-profile.scss',
 })
 export class UserProfile implements OnInit {
-  profile: Profile | null = null;
+  profile: ProfileInterface | null = null;
   loading = true;
 
   private readonly _supabaseService: SupabaseService = inject(SupabaseService);

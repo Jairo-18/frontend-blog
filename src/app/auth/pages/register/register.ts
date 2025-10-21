@@ -15,7 +15,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { Country } from '../../interfaces/country.interface';
 import { UserInterface } from '../../interfaces/user.interface';
-import { SupabaseService } from '../../services/supabase.service';
+import { SignUpService } from '../../services/signUp.service';
+import { SnackBarService } from '../../../shared/services/snackBar.service';
 
 @Component({
   selector: 'app-register',
@@ -42,14 +43,16 @@ export class Register implements OnInit {
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
   countries: string[] = [];
+  isLoading: boolean = false;
   filteredCountries: Observable<string[]> = new Observable();
 
-  private readonly _http: HttpClient = inject(HttpClient);
-  private readonly _fb: FormBuilder = inject(FormBuilder);
-  private readonly _router: Router = inject(Router);
-  private readonly _supabaseService: SupabaseService = inject(SupabaseService);
   private readonly _passwordValidationService: CustomValidationsService =
     inject(CustomValidationsService);
+  private readonly _singUpService: SignUpService = inject(SignUpService);
+  private readonly _snackBarService: SnackBarService = inject(SnackBarService);
+  private readonly _router: Router = inject(Router);
+  private readonly _http: HttpClient = inject(HttpClient);
+  private readonly _fb: FormBuilder = inject(FormBuilder);
 
   ngOnInit() {
     this._http
@@ -100,22 +103,35 @@ export class Register implements OnInit {
   }
 
   async registerSupabase() {
-    if (this.personalInfoForm.valid && this.accountInfoForm.valid) {
-      const data: UserInterface = {
-        ...this.personalInfoForm.value,
-        ...this.accountInfoForm.value,
-      };
-      try {
-        await this._supabaseService.signUp(data.email, data.password, {
-          fullName: data.fullName,
-          email: data.email,
-          country: data.country,
-          phone: data.phone,
-        });
-        this._router.navigate(['/auth/send-email']);
-      } catch (error: unknown) {
-        console.error('Error registrando usuario:', error);
-      }
+    if (!this.personalInfoForm.valid || !this.accountInfoForm.valid) {
+      this._snackBarService.error('Por favor completa todos los campos correctamente');
+      this.personalInfoForm.markAllAsTouched();
+      this.accountInfoForm.markAllAsTouched();
+      return;
+    }
+
+    const data: UserInterface = {
+      ...this.personalInfoForm.value,
+      ...this.accountInfoForm.value,
+    };
+
+    try {
+      this.isLoading = true;
+
+      await this._singUpService.signUp(data.email, data.password, {
+        fullName: data.fullName,
+        email: data.email,
+        country: data.country,
+        phone: data.phone,
+      });
+
+      this._router.navigate(['/auth/send-email'], {
+        state: { email: data.email },
+      });
+    } catch (error: unknown) {
+      console.error('Error registrando usuario:', error);
+    } finally {
+      this.isLoading = false;
     }
   }
 }

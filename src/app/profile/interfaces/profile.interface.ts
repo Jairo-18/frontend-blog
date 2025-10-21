@@ -1,4 +1,4 @@
-export interface Profile {
+export interface ProfileInterface {
   id: string;
   fullName: string;
   country?: string;
@@ -7,4 +7,9 @@ export interface Profile {
   bibliography?: string;
   email?: string;
   created_at: Date;
+}
+export interface RoleTypeInterface {
+  id: string;
+  code: string;
+  name: string;
 }
