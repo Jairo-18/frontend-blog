@@ -36,6 +36,12 @@ export class SupabaseService {
         this.currentUser.next(session?.user ?? null);
 
         if (event === 'SIGNED_IN' && session?.user) {
+          // 🔹 Guardar tokens de sesión
+          if (session.access_token && session.refresh_token) {
+            localStorage.setItem('access_token', session.access_token);
+            localStorage.setItem('refresh_token', session.refresh_token);
+          }
+
           const pendingUserData = localStorage.getItem('pendingUserData');
           if (pendingUserData) {
             try {
@@ -61,6 +67,18 @@ export class SupabaseService {
               console.error('Error procesando pendingUserData:', err);
             }
           }
+        }
+
+        // 🔹 Si el token se refresca, actualizamos también en localStorage
+        if (event === 'TOKEN_REFRESHED' && session) {
+          localStorage.setItem('access_token', session.access_token);
+          localStorage.setItem('refresh_token', session.refresh_token);
+        }
+
+        // 🔹 Si el usuario cierra sesión, limpiamos
+        if (event === 'SIGNED_OUT') {
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
         }
 
         if (event === 'INITIAL_SESSION' || event === 'SIGNED_OUT') {
@@ -125,28 +143,6 @@ export class SupabaseService {
         resolve(false);
       }, 1000);
     });
-  }
-
-  async getProfile(userId: string) {
-    const { data, error } = await this.supabase
-      .from('profile')
-      .select('id, fullName, country, username, bibliography, phone, email, created_at')
-      .eq('id', userId)
-      .single();
-
-    if (error) {
-      console.error('Error obteniendo perfil:', error);
-      return null;
-    }
-
-    return data;
-  }
-
-  async getCurrentUserProfile() {
-    const user = this.currentUserValue;
-    if (!user) return null;
-
-    return await this.getProfile(user.id);
   }
 
   async updateProfile(

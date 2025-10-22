@@ -7,42 +7,61 @@
     ></div>
 
     <div
-      class="relative z-10 flex flex-col md:flex-row items-center justify-center h-full text- text-center px-6 gap-8"
+      class="relative z-10 flex flex-col md:flex-row items-center justify-center h-full text-center px-6 gap-8"
     >
       <section
         class="w-full md:w-[30%] bg-[#F0F4F9] border-[0.5px] border-[#7B7B7B] shadow-xl rounded-lg p-6"
       >
-        @if (loading) {
-        <div class="text-gray-600">Cargando perfil...</div>
-        } @if (!loading && profile) {
-        <div class="flex flex-col p-4">
+        <!-- Estado de carga -->
+        <div *ngIf="loading()" class="flex flex-col items-center justify-center py-8">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#9811fb]"></div>
+          <p class="text-gray-600 mt-4">Cargando perfil...</p>
+        </div>
+
+        <!-- Perfil cargado -->
+        <div *ngIf="!loading() && profile()" class="flex flex-col p-4">
           <span class="text-2xl font-bold text-black">
-            {{ profile.fullName || 'John Joe' }}
+            {{ profile()!.fullName || 'John Joe' }}
           </span>
           <p class="text-sm text-gray-600 flex items-center justify-center">
-            <span class="text-[#757575] font-medium">@{{ profile.username || 'User test' }}</span>
+            <span class="text-[#757575] font-medium"
+              >@{{ profile()!.username || 'User test' }}</span
+            >
           </p>
           <span class="text-base font-medium text-gray-700 mt-2">{{
-            profile.bibliography || 'Escribe tu bibliografía aquí'
+            profile()!.bibliography || 'Escribe tu bibliografía aquí'
           }}</span>
           <div class="flex content-between w-full mt-6 justify-center items-center gap-x-6">
             <div class="flex content-between items-center gap-2">
               <mat-icon class="!text-[#9811fb]">public</mat-icon>
               <span class="text-sm font-medium text-[#757575]">{{
-                profile.country || 'Pon tu país'
+                profile()!.country || 'Pon tu país'
               }}</span>
             </div>
             <div class="flex content-between items-center gap-2">
               <mat-icon class="!text-[#9811fb]">calendar_today</mat-icon>
               <span class="text-sm font-medium text-[#757575] capitalize">
-                {{ profile.created_at | date : 'MMMM, yyyy' }}
+                {{ profile()!.created_at | date : 'MMMM, yyyy' }}
               </span>
             </div>
           </div>
         </div>
-        } @if (!loading && !profile) {
-        <div class="text-gray-600">No se pudo cargar el perfil</div>
-        }
+
+        <!-- Error al cargar perfil -->
+        <div
+          *ngIf="!loading() && !profile()"
+          class="flex flex-col items-center justify-center py-8"
+        >
+          <mat-icon class="!text-red-500 !text-5xl">error_outline</mat-icon>
+          <p class="text-gray-600 mt-4">No se pudo cargar el perfil</p>
+          <p *ngIf="errorMessage()" class="text-sm text-red-500 mt-2">{{ errorMessage() }}</p>
+          <button
+            (click)="loadProfile()"
+            class="mt-4 px-4 py-2 bg-[#9811fb] text-white rounded-lg hover:bg-[#7a0dd1] transition"
+          >
+            Reintentar
+          </button>
+        </div>
       </section>
 
       <section

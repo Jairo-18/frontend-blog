@@ -1,8 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { SupabaseService } from '../../../auth/services/supabase.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { ProfileInterface } from '../../interfaces/profile.interface';
+import { ProfileService } from '../../services/profile.service';
+import { TokenService } from '../../../auth/services/token.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -12,46 +13,46 @@ import { ProfileInterface } from '../../interfaces/profile.interface';
   styleUrl: './user-profile.scss',
 })
 export class UserProfile implements OnInit {
-  profile: ProfileInterface | null = null;
-  loading = true;
+  profile = signal<ProfileInterface | null>(null);
+  loading = signal<boolean>(true);
+  errorMessage = signal<string | null>(null);
 
-  private readonly _supabaseService: SupabaseService = inject(SupabaseService);
+  private readonly _tokenService = inject(TokenService);
+  private readonly _profileService = inject(ProfileService);
 
-  async ngOnInit() {
-    await this.loadProfile();
+  ngOnInit() {
+    this.loadProfile();
   }
 
-  async loadProfile() {
-    try {
-      this.loading = true;
+  loadProfile() {
+    this.loading.set(true);
+    this.errorMessage.set(null);
 
-      const authReady = await this._supabaseService.waitForAuthReady();
+    const userId = this._tokenService.getUserId();
 
-      if (!authReady) {
-        console.warn('⚠️ Timeout esperando inicialización de auth');
-        this.loading = false;
-        return;
-      }
-
-      const currentUser = this._supabaseService.currentUserValue;
-
-      if (!currentUser) {
-        console.warn('⚠️ No hay usuario logueado');
-        this.profile = null;
-        this.loading = false;
-        return;
-      }
-
-      this.profile = await this._supabaseService.getProfile(currentUser.id);
-
-      if (!this.profile) {
-        console.warn('❌ No se encontró perfil en la base de datos');
-      }
-    } catch (error) {
-      console.error('Error cargando perfil:', error);
-      this.profile = null;
-    } finally {
-      this.loading = false;
+    if (!userId) {
+      this.errorMessage.set('No hay sesión activa');
+      this.profile.set(null);
+      this.loading.set(false);
+      return;
     }
+
+    this._profileService.getProfile(userId).then(
+      (profileData) => {
+        if (!profileData) {
+          this.errorMessage.set('Perfil no encontrado');
+          this.profile.set(null);
+        } else {
+          this.profile.set(profileData);
+        }
+        this.loading.set(false);
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (error: any) => {
+        this.errorMessage.set(error?.message || 'Error desconocido');
+        this.profile.set(null);
+        this.loading.set(false);
+      }
+    );
   }
 }

@@ -1,28 +1,29 @@
 import { inject, Injectable } from '@angular/core';
 import { SnackBarService } from '../../shared/services/snackBar.service';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SignUpService {
   private readonly _snackBarService: SnackBarService = inject(SnackBarService);
-  private readonly _supabaseClient: SupabaseClient = inject(SupabaseClient);
+  private readonly _tokenService: TokenService = inject(TokenService);
+  private readonly _supabaseClient = inject(SupabaseClient);
 
-  // 🔹 Reutilizamos el método para obtener el usuario con su rol
   private async getUserWithRole(userId: string) {
     const { data, error } = await this._supabaseClient
       .from('profile')
       .select(
         `
+        id,
+        roleTypeId,
+        roleType:roleType!fk_profile_roletype (
           id,
-          roleTypeId,
-          roleType:roleType!fk_profile_roletype (
-            id,
-            code,
-            name
-          )
-        `
+          code,
+          name
+        )
+      `
       )
       .eq('id', userId)
       .single();
@@ -35,29 +36,23 @@ export class SignUpService {
     return data;
   }
 
-  // 🔹 Registro normal de usuario
   async signUp(
     email: string,
     password: string,
     pendingUserData: { fullName: string; country: string; phone: string; email: string }
   ) {
     try {
-      // 1️⃣ Verificar si ya existe el correo
       const { data: existingProfile, error: fetchError } = await this._supabaseClient
         .from('profile')
         .select('id')
         .eq('email', email)
         .maybeSingle();
 
-      if (fetchError && fetchError.code !== 'PGRST116') {
-        throw new Error('Error al verificar el correo. Inténtalo de nuevo.');
-      }
+      if (fetchError && fetchError.code !== 'PGRST116')
+        throw new Error('Error al verificar el correo.');
 
-      if (existingProfile) {
-        throw new Error('Este correo ya está registrado.');
-      }
+      if (existingProfile) throw new Error('Este correo ya está registrado.');
 
-      // 2️⃣ Crear usuario en Auth
       const { data, error } = await this._supabaseClient.auth.signUp({
         email,
         password,
@@ -67,54 +62,42 @@ export class SignUpService {
         },
       });
 
-      if (error) {
-        console.error('❌ Error en signUp:', error);
-        if (error.message.includes('User already registered')) {
-          throw new Error('Este correo ya está registrado.');
-        }
-        throw new Error('No se pudo completar el registro. Inténtalo de nuevo.');
-      }
+      if (error) throw error;
+      if (!data.user) throw new Error('No se pudo crear el usuario.');
 
-      if (!data.user) {
-        throw new Error('No se pudo crear el usuario. Inténtalo de nuevo.');
-      }
-
-      console.log('✅ Usuario creado en Auth:', data.user.id);
-
-      // 3️⃣ Crear perfil en la tabla "profile"
       const { error: profileError } = await this._supabaseClient.from('profile').insert({
         id: data.user.id,
         email: data.user.email,
         fullName: pendingUserData.fullName,
         country: pendingUserData.country,
         phone: pendingUserData.phone,
-        roleTypeId: 'ee3609d2-da86-4e9e-84a5-fb8814b17031', // 👈 rol por defecto
+        roleTypeId: 'ee3609d2-da86-4e9e-84a5-fb8814b17031',
         created_at: new Date().toISOString(),
       });
 
-      if (profileError) {
-        console.error('⚠️ Error creando perfil:', profileError);
-        throw new Error('Error al crear el perfil. Inténtalo de nuevo.');
+      if (profileError) throw new Error('Error al crear el perfil.');
+
+      if (data.session) {
+        const userWithRole = await this.getUserWithRole(data.user.id);
+
+        this._tokenService.saveSession(
+          data.session.access_token,
+          data.session.refresh_token,
+          userWithRole
+        );
+
+        this._snackBarService.success('¡Registro exitoso!');
+      } else {
+        this._snackBarService.info(
+          'Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.'
+        );
       }
 
-      console.log('✅ Perfil creado exitosamente');
-
-      // 4️⃣ Obtener usuario con su rol
-      const userWithRole = await this.getUserWithRole(data.user.id);
-
-      // 5️⃣ Guardar en localStorage
-      localStorage.setItem('userData', JSON.stringify(userWithRole));
-
-      // 6️⃣ Mostrar mensaje
-      this._snackBarService.success(
-        'Te has registrado correctamente. Revisa tu correo para activar tu cuenta.'
-      );
-
-      return { ...data, userWithRole };
-    } catch (err) {
-      console.error('❌ Error completo:', err);
-      const message = err instanceof Error ? err.message : 'Error desconocido al registrarse.';
-      this._snackBarService.error(message);
+      return { ...data, requiresEmailConfirmation: !data.session };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error('❌ Error completo en signUp:', err);
+      this._snackBarService.error(err.message || 'Error desconocido al registrarse.');
       throw err;
     }
   }
