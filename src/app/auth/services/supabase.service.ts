@@ -145,30 +145,6 @@ export class SupabaseService {
     });
   }
 
-  async updateProfile(
-    userId: string,
-    profileData: {
-      username?: string;
-      country?: string;
-      phone?: string;
-      bibliography?: string;
-    }
-  ) {
-    const { data, error } = await this.supabase
-      .from('profile')
-      .update(profileData)
-      .eq('id', userId)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error actualizando perfil:', error);
-      throw error;
-    }
-
-    return data;
-  }
-
   async signOut() {
     try {
       const { error } = await this.supabase.auth.signOut();
@@ -179,8 +155,6 @@ export class SupabaseService {
 
       localStorage.clear();
       sessionStorage.clear();
-
-      console.log('✅ SignOut completado');
     } catch (error) {
       console.error('❌ Error deslogeando:', error);
       throw error;

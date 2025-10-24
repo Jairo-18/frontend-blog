@@ -1,74 +1,17 @@
-<article>
-  <section class="w-full h-[440px] relative overflow-hidden">
-    <div class="absolute inset-0 bg-fondo"></div>
-
-    <div
-      class="absolute inset-10 bg-gradient-to-r from-[#ff9a76]/80 via-[#ff6b6b]/70 to-[#ffcc70]/80 mix-blend-overlay"
-    ></div>
-
-    <div
-      class="relative z-10 flex flex-col md:flex-row items-center justify-center h-full text-center px-6 gap-8"
-    >
-      <section
-        class="w-full md:w-[30%] bg-[#F0F4F9] border-[0.5px] border-[#7B7B7B] shadow-xl rounded-lg p-6"
-      >
-        <!-- Estado de carga -->
-        <div *ngIf="loading()" class="flex flex-col items-center justify-center py-8">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#9811fb]"></div>
-          <p class="text-gray-600 mt-4">Cargando perfil...</p>
-        </div>
-
-        <!-- Perfil cargado -->
-        <div *ngIf="!loading() && profile()" class="flex flex-col p-4">
-          <span class="text-2xl font-bold text-black">
-            {{ profile()!.fullName || 'John Joe' }}
-          </span>
-          <p class="text-sm text-gray-600 flex items-center justify-center">
-            <span class="text-[#757575] font-medium"
-              >@{{ profile()!.username || 'User test' }}</span
-            >
-          </p>
-          <span class="text-base font-medium text-gray-700 mt-2">{{
-            profile()!.bibliography || 'Escribe tu bibliografía aquí'
-          }}</span>
-          <div class="flex content-between w-full mt-6 justify-center items-center gap-x-6">
-            <div class="flex content-between items-center gap-2">
-              <mat-icon class="!text-[#9811fb]">public</mat-icon>
-              <span class="text-sm font-medium text-[#757575]">{{
-                profile()!.country || 'Pon tu país'
-              }}</span>
-            </div>
-            <div class="flex content-between items-center gap-2">
-              <mat-icon class="!text-[#9811fb]">calendar_today</mat-icon>
-              <span class="text-sm font-medium text-[#757575] capitalize">
-                {{ profile()!.created_at | date : 'MMMM, yyyy' }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Error al cargar perfil -->
-        <div
-          *ngIf="!loading() && !profile()"
-          class="flex flex-col items-center justify-center py-8"
-        >
-          <mat-icon class="!text-red-500 !text-5xl">error_outline</mat-icon>
-          <p class="text-gray-600 mt-4">No se pudo cargar el perfil</p>
-          <p *ngIf="errorMessage()" class="text-sm text-red-500 mt-2">{{ errorMessage() }}</p>
-          <button
-            (click)="loadProfile()"
-            class="mt-4 px-4 py-2 bg-[#9811fb] text-white rounded-lg hover:bg-[#7a0dd1] transition"
-          >
-            Reintentar
-          </button>
-        </div>
-      </section>
-
-      <section
-        class="w-full md:w-[50%] bg-[#F0F4F9] border-[0.5px] border-[#7B7B7B] shadow-xl rounded-lg p-6"
-      >
-        <!-- Aquí puedes agregar más contenido -->
-      </section>
-    </div>
-  </section>
+<article class="relative w-full">
+  <div
+    class="w-full h-[400px] md:h-[600px] lg:h-[600px] 2xl:h-[600px] 3xl:h-[700px] border border-[#7B7B7B]/50 shadow-xl text-black bg-fondo bg-blend-overlay"
+  ></div>
 </article>
+
+<div
+  class="relative -mt-80 md:-mt-96 lg:-mt-96 2xl:-mt-[400px] 3xl:-mt-[500px] z-20 flex flex-col md:flex-row lg:flex-col 2xl:flex-row 3xl:flex-row justify-center items-start lg:items-center gap-6 md:gap-40 lg:gap-10 2xl:gap-16 3xl:gap-16 px-4 md:px-12 pb-20"
+>
+  <section class="w-full md:w-[30%] lg:w-[60%] 2xl:w-[35%] 3xl:w-[35%]">
+    <app-card-info-user></app-card-info-user>
+  </section>
+
+  <section class="w-full md:w-[30%] lg:w-[70%] 2xl:w-[65%] 3xl:w-[65%]">
+    <app-card-info-user></app-card-info-user>
+  </section>
+</div>

@@ -1,0 +1,126 @@
+@if (loading()) {
+<div class="flex flex-col items-center justify-center py-8">
+  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#9811fb]"></div>
+  <p class="text-gray-600 mt-4">Cargando perfil...</p>
+</div>
+} @if (!loading() && profile()) {
+<div
+  class="flex flex-col gap-1 md:gap-5 p-4 md:p-8 bg-[#F0F4F9] rounded-lg shadow-lg border border-[#757575] text-center justify-center items-center text-black"
+>
+  <img
+    src="../../../../assets/images/optimusprain.jpg"
+    alt="Imagen de perfíl"
+    class="w-[110px] h-[110px] rounded-full"
+  />
+  <div class="flex items-center gap-3">
+    @if (editingField() === 'fullName') {
+    <input
+      type="text"
+      class="border-b border-gray-400 outline-none bg-transparent flex-1 p-1 focus:border-[#9811fb] transition"
+      [value]="tempValue()"
+      (input)="tempValue.set($any($event.target).value)"
+      (keyup.enter)="saveField('fullName')"
+      (keyup.escape)="cancelEditing()"
+    />
+    } @else {
+    <span class="text-base md:text-2xl lg:text-xl 2xl:text-2xl font-bold text-black">
+      {{ profile()!.fullName || 'John Joe' }}
+    </span>
+    }
+    <button
+      class="cursor-pointer text-[#9811fb] hover:bg-[#9811fb] hover:text-white rounded-full trasition items-center justify-center flex p-1"
+    >
+      <mat-icon
+        (click)="editingField() === 'fullName' ? saveField('fullName') : startEditing('fullName')"
+      >
+        {{ editingField() === 'fullName' ? 'save' : 'edit' }}
+      </mat-icon>
+    </button>
+  </div>
+
+  <div class="flex items-center gap-3">
+    @if (editingField() === 'username') {
+    <input
+      type="text"
+      class="border-b border-gray-400 outline-none bg-transparent flex-1 p-1 focus:border-[#9811fb] transition"
+      [value]="tempValue()"
+      (input)="tempValue.set($any($event.target).value)"
+      (keyup.enter)="saveField('username')"
+      (keyup.escape)="cancelEditing()"
+    />
+    } @else {
+    <span class="text-xs md:text-base text-[#757575] font-normal"
+      >@{{ profile()!.username || 'User test' }}</span
+    >
+    }
+    <button
+      class="cursor-pointer text-[#9811fb] hover:bg-[#9811fb] hover:text-white rounded-full trasition items-center justify-center flex p-1"
+    >
+      <mat-icon
+        (click)="editingField() === 'username' ? saveField('username') : startEditing('username')"
+      >
+        {{ editingField() === 'username' ? 'save' : 'edit' }}
+      </mat-icon>
+    </button>
+  </div>
+
+  <div class="flex flex-col items-center gap-3 mb-2 md:mb-0">
+    @if (editingField() === 'bibliography') {
+    <textarea
+      rows="10"
+      class="w-[230px] md:w-[450px] lg:w-[450px] 2xl:w-[400px] 3xl:w-[510px] border border-gray-300 rounded-md p-2 resize-none outline-none focus:border-[#9811fb] transition"
+      [value]="tempValue()"
+      (input)="tempValue.set($any($event.target).value)"
+      (keyup.escape)="cancelEditing()"
+    ></textarea>
+    } @else {
+    <span class="text-sm md:text-base font-medium text-[#757575]">
+      {{ profile()!.bibliography || 'Escribe tu bibliografía aquí' }}
+    </span>
+    }
+    <button
+      class="cursor-pointer text-[#9811fb] hover:bg-[#9811fb] hover:text-white rounded-full trasition items-center justify-center flex p-1"
+    >
+      <mat-icon
+        (click)="
+          editingField() === 'bibliography'
+            ? saveField('bibliography')
+            : startEditing('bibliography')
+        "
+      >
+        {{ editingField() === 'bibliography' ? 'save' : 'edit' }}
+      </mat-icon>
+    </button>
+  </div>
+
+  <div class="flex content-between items-center justify-center gap-4">
+    <div class="flex items-center gap-3">
+      <mat-icon class="!text-[#9811fb]">public</mat-icon>
+      <span class="text-xs font-normal text-[#757575]">
+        {{ profile()!.country || 'Pon tu país' }}
+      </span>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <mat-icon class="!text-[#9811fb]">calendar_today</mat-icon>
+      <span class="text-xs font-normal text-[#757575] capitalize">
+        {{ profile()!.created_at | date : 'MMMM, yyyy' }}
+      </span>
+    </div>
+  </div>
+</div>
+} @if (!loading() && !profile()) {
+<div class="flex flex-col items-center justify-center py-8">
+  <mat-icon class="!text-red-500 !text-5xl">error_outline</mat-icon>
+  <p class="text-gray-600 mt-4">No se pudo cargar el perfil</p>
+  @if (errorMessage()) {
+  <p class="text-sm text-red-500 mt-2">{{ errorMessage() }}</p>
+  }
+  <button
+    (click)="loadProfile()"
+    class="mt-4 px-4 py-2 bg-[#9811fb] text-white rounded-lg hover:bg-[#7a0dd1] transition"
+  >
+    Reintentar
+  </button>
+</div>
+}

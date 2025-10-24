@@ -36,4 +36,28 @@ export class ProfileService {
 
     return await this.getProfile(user.id);
   }
+
+  async updateProfile(
+    userId: string,
+    profileData: {
+      username?: string;
+      country?: string;
+      phone?: string;
+      bibliography?: string;
+    }
+  ) {
+    const { data, error } = await this.supabase
+      .from('profile')
+      .update(profileData)
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error actualizando perfil:', error);
+      throw error;
+    }
+
+    return data;
+  }
 }

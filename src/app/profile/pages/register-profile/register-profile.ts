@@ -13,6 +13,7 @@ import { Country } from '../../../auth/interfaces/country.interface';
 import { SupabaseService } from '../../../auth/services/supabase.service';
 import { SnackBarService } from '../../../shared/services/snackBar.service';
 import { Router } from '@angular/router';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-register-profile',
@@ -37,6 +38,7 @@ export class RegisterProfile implements OnInit {
   isSubmitting: boolean = false;
 
   private readonly _supabaseService: SupabaseService = inject(SupabaseService);
+  private readonly _profileService: ProfileService = inject(ProfileService);
   private readonly _snackBarService: SnackBarService = inject(SnackBarService);
   private readonly _http: HttpClient = inject(HttpClient);
   private readonly _fb: FormBuilder = inject(FormBuilder);
@@ -99,7 +101,7 @@ export class RegisterProfile implements OnInit {
         bibliography: this.complementInfo.get('bibliography')?.value,
       };
 
-      await this._supabaseService.updateProfile(user.id, profileData);
+      await this._profileService.updateProfile(user.id, profileData);
 
       this._snackBarService.success('¡Perfil completado exitosamente!');
       this._router.navigate(['/profile/user-profile']);
