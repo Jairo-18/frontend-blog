@@ -4,6 +4,7 @@ import { TokenService } from '../../../auth/services/token.service';
 import { ProfileService } from '../../services/profile.service';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-card-info-user',
@@ -19,32 +20,42 @@ export class CardInfoUser implements OnInit {
   editingField = signal<keyof ProfileInterface | null>(null);
   tempValue = signal<string>('');
 
-  private readonly _tokenService = inject(TokenService);
   private readonly _profileService = inject(ProfileService);
+  private readonly _tokenService: TokenService = inject(TokenService);
+  private readonly _supabaseClient = inject(SupabaseClient);
 
   ngOnInit(): void {
     this.loadProfile();
   }
 
   async loadProfile(): Promise<void> {
-    this.loading.set(true);
-    this.errorMessage.set(null);
-
     try {
-      const userId = this._tokenService.getUserId();
-      if (!userId) {
-        throw new Error('No hay sesión activa');
-      }
+      this.loading.set(true);
 
-      const profileData = await this._profileService.getProfile(userId);
-      if (!profileData) {
-        throw new Error('Perfil no encontrado');
-      }
+      const {
+        data: { session },
+      } = await this._supabaseClient.auth.getSession();
 
-      this.profile.set(profileData);
-    } catch (error) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'Error desconocido');
-      this.profile.set(null);
+      if (!session)
+        throw new Error('No hay una sesión activa. Por favor, inicia sesión nuevamente.');
+
+      const userId = session.user.id;
+
+      const { data: profile, error: profileError } = await this._supabaseClient
+        .from('profile')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+      if (!profile) throw new Error('No se encontró el perfil.');
+
+      this.profile.set(profile);
+    } catch (err: Error | unknown) {
+      console.error('❌ Error cargando perfil:', err);
+      this.errorMessage.set(
+        err instanceof Error ? err.message : 'Error desconocido al cargar el perfil.'
+      );
     } finally {
       this.loading.set(false);
     }

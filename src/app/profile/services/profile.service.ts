@@ -40,24 +40,36 @@ export class ProfileService {
   async updateProfile(
     userId: string,
     profileData: {
+      fullName?: string;
       username?: string;
       country?: string;
       phone?: string;
       bibliography?: string;
+      roleTypeId?: string;
     }
   ) {
-    const { data, error } = await this.supabase
-      .from('profile')
-      .update(profileData)
-      .eq('id', userId)
-      .select()
-      .single();
+    const userEmail = (await this.supabase.auth.getSession()).data.session?.user.email || '';
 
-    if (error) {
-      console.error('Error actualizando perfil:', error);
-      throw error;
+    const userExist = await this.getProfile(userId);
+    if (userExist) {
+      const { data, error } = await this.supabase
+        .from('profile')
+        .update({ ...profileData, email: userEmail })
+        .eq('id', userId)
+        .select()
+        .single();
+      if (error) {
+        console.error('Error actualizando perfil:', error);
+        throw error;
+      }
+      return data;
+    } else {
+      const { data } = await this.supabase
+        .from('profile')
+        .insert({ id: userId, email: userEmail, ...profileData })
+        .select()
+        .single();
+      return data;
     }
-
-    return data;
   }
 }

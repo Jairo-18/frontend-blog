@@ -6,6 +6,7 @@ export interface ProfileInterface {
   username?: string;
   bibliography?: string;
   email?: string;
+  roleTypeId?: string;
   created_at: Date;
 }
 export interface RoleTypeInterface {

@@ -46,10 +46,12 @@ export class RegisterProfile implements OnInit {
 
   constructor() {
     this.complementInfo = this._fb.group({
-      username: ['', [Validators.required]],
+      fullName: ['', [Validators.required]],
       country: ['', [Validators.required]],
       phone: ['', [Validators.required]],
+      username: [''],
       bibliography: [''],
+      roleTypeId: ['ee3609d2-da86-4e9e-84a5-fb8814b17031'],
     });
   }
 
@@ -96,9 +98,11 @@ export class RegisterProfile implements OnInit {
 
       const profileData = {
         username: this.complementInfo.get('username')?.value,
+        fullName: this.complementInfo.get('fullName')?.value,
         country: this.complementInfo.get('country')?.value,
         phone: this.complementInfo.get('phone')?.value,
         bibliography: this.complementInfo.get('bibliography')?.value,
+        roleTypeId: this.complementInfo.get('roleTypeId')?.value,
       };
 
       await this._profileService.updateProfile(user.id, profileData);

@@ -1,6 +1,15 @@
 <app-auth-card title="Llena el formulario" subtitle="Ingresa los datos para completar tu perfil">
   <form [formGroup]="complementInfo" class="mt-2">
     <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Nombres y apellidos completos</mat-label>
+      <input matInput formControlName="fullName" type="tel" />
+      <mat-icon matPrefix>person</mat-icon>
+      @if (complementInfo.get('fullName')?.hasError('required')) {
+      <mat-error>Los nombre y apellidos es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
       <mat-label>Nombre de usuario</mat-label>
       <input matInput formControlName="username" type="tel" />
       <mat-icon matPrefix>person</mat-icon>

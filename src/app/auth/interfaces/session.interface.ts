@@ -43,3 +43,12 @@ export interface UnifiedSession {
     }[];
   };
 }
+export interface UserWithRoleInterface {
+  id: string;
+  roleTypeId: string;
+  roleType: {
+    id: string;
+    code: string;
+    name: string;
+  }[];
+}

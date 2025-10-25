@@ -4,6 +4,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { SnackBarService } from '../../shared/services/snackBar.service';
 import { Router } from '@angular/router';
 import { TokenService } from './token.service';
+import { UserWithRoleInterface } from '../interfaces/session.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class SignInService {
   private readonly _router: Router = inject(Router);
 
   private async getUserWithRole(userId: string) {
-    const { data, error } = await this._supabaseClient
+    const response = await this._supabaseClient
       .from('profile')
       .select(
         `
@@ -31,8 +32,7 @@ export class SignInService {
       .eq('id', userId)
       .single();
 
-    if (error) throw error;
-    return data;
+    return response.data as UserWithRoleInterface;
   }
 
   async signIn(email: string, password: string) {
@@ -84,7 +84,7 @@ export class SignInService {
       const { data, error } = await this._supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin + '/auth/callback',
+          redirectTo: '/auth/callback',
           skipBrowserRedirect: true,
         },
       });
@@ -112,6 +112,7 @@ export class SignInService {
             };
 
             const userWithRole = await this.getUserWithRole(user.id);
+
             this._tokenService.saveSession(access_token, refresh_token, userWithRole);
 
             const { data: profile } = await this._supabaseClient
